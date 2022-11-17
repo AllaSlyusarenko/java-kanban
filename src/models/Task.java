@@ -1,3 +1,5 @@
+package models;
+
 import java.util.Objects;
 
 public class Task {
@@ -7,16 +9,13 @@ public class Task {
     protected String status;
 
     public Task(String name, String description, int id, String status) {
+        // этот конструктор нужен для создания нового объекта, который подается на вход для обновления старого объекта,
+        // поэтому id мы должны указать не новый, а тот, который уже есть в системе, также статус может быть отличным
+        // от "NEW": "IN_PROGRESS", "DONE"
         this.name = name;
         this.description = description;
         this.id = id;
         this.status = status;
-    }
-
-    public Task(String name, String description, int id) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
     }
 
     public Task(String name, String description) {
@@ -64,6 +63,15 @@ public class Task {
         Task task = (Task) o;
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
                 && Objects.equals(status, task.status);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + id;
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        return result;
     }
 
     @Override
