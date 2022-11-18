@@ -37,16 +37,19 @@ public class Manager {
         }
     }
 
-    public void getAllTasks() {
-        System.out.println(tasks);
+    public ArrayList<Task> getAllTasks() {
+        ArrayList<Task> allTasks = new ArrayList<>(tasks.values());
+        return allTasks;
     }
 
-    public void getAllEpics() {
-        System.out.println(epics);
+    public ArrayList<Epic> getAllEpics() {
+        ArrayList<Epic> allEpics = new ArrayList<>(epics.values());
+        return allEpics;
     }
 
-    public void getAllSubtasks() {
-        System.out.println(subtasks);
+    public ArrayList<Subtask> getAllSubtasks() {
+        ArrayList<Subtask> allSubtasks = new ArrayList<>(subtasks.values());
+        return allSubtasks;
     }
 
     public void deleteAllTasks() {
@@ -66,30 +69,33 @@ public class Manager {
         subtasks.clear();
     }
 
-    public void getTaskById(int id) {
+    public Task getTaskById(int id) {
         if (tasks.containsKey(id)) {
-            System.out.println(tasks.get(id));
+            return tasks.get(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет таска с номером " + id + "\n");
+            return null;
         }
     }
 
-    public void getEpicById(int id) {
+    public Epic getEpicById(int id) {
         if (epics.containsKey(id)) {
-            System.out.println(epics.get(id));
+            return epics.get(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет эпика с номером " + id + "\n");
+            return null;
         }
     }
 
-    public void getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) {
         if (subtasks.containsKey(id)) {
-            System.out.println(subtasks.get(id));
+            return subtasks.get(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет сабтаска с номером " + id + "\n");
+            return null;
         }
     }
 
@@ -172,16 +178,17 @@ public class Manager {
         }
     }
 
-    public void getAllEpicSubtasks(int id) {
+    public ArrayList<Subtask> getAllEpicSubtasks(int id) {
         if (epics.containsKey(id)) {
             ArrayList<Subtask> epicSubtasks = new ArrayList<>();
             for (Integer idSubtask : epics.get(id).getIncomingSubtasksId()) {
                 epicSubtasks.add(subtasks.get(idSubtask));
             }
-            System.out.println(epicSubtasks);
+            return epicSubtasks;
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет эпика с номером " + id + "\n");
+            return null;
         }
 
 

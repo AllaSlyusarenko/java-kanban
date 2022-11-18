@@ -8,16 +8,6 @@ public class Task {
     protected int id;
     protected String status;
 
-    public Task(String name, String description, int id, String status) {
-        // этот конструктор нужен для создания нового объекта, который подается на вход для обновления старого объекта,
-        // поэтому id мы должны указать не новый, а тот, который уже есть в системе, также статус может быть отличным
-        // от "NEW": "IN_PROGRESS", "DONE"
-        this.name = name;
-        this.description = description;
-        this.id = id;
-        this.status = status;
-    }
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;

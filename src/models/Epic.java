@@ -10,14 +10,6 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public Epic(String name, String description, int id, ArrayList<Integer> incomingSubtasksId) {
-        // этот конструктор нужен для создания нового объекта, который подается на вход для обновления старого объекта,
-        // поэтому id мы должны указать не новый, а тот, который уже есть в системе
-        super(name, description);
-        this.id = id;
-        this.incomingSubtasksId = incomingSubtasksId;
-    }
-
     public ArrayList<Integer> getIncomingSubtasksId() {
         return incomingSubtasksId;
     }
