@@ -6,12 +6,12 @@ public class Task {
     protected String name;
     protected String description;
     protected int id;
-    protected String status;
+    protected TaskStatus taskStatus;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.status = "NEW";
+        this.taskStatus = TaskStatus.NEW;
     }
 
     public String getName() {
@@ -38,12 +38,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
+    public TaskStatus getStatus() {
+        return taskStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(TaskStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
-                && Objects.equals(status, task.status);
+                && Objects.equals(taskStatus, task.taskStatus);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Task {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + id;
-        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (taskStatus != null ? taskStatus.hashCode() : 0);
         return result;
     }
 
@@ -70,7 +70,7 @@ public class Task {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
-                ", status='" + status + '\'' +
+                ", status='" + taskStatus + '\'' +
                 '}';
     }
 }
