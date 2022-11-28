@@ -2,25 +2,23 @@ package manager;
 
 import models.Task;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    List<Task> inMemory = new ArrayList<>();
+    private List<Task> historyOfViewedTasks = new LinkedList<>();
 
     @Override
     public void add(Task task) {
-        if (inMemory.size() >= 10) {
-            inMemory.remove(0);
-            inMemory.add(task);
-        } else {
-            inMemory.add(task);
+        if (historyOfViewedTasks.size() == 10) {
+            historyOfViewedTasks.remove(0); // почему-то .removeFirst() у меня отсутствует
         }
+        historyOfViewedTasks.add(task);
     }
 
     @Override
     public List<Task> getHistory() {
-        return inMemory;
+        return historyOfViewedTasks;
     }
 }

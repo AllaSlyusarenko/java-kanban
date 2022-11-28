@@ -10,14 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    HashMap<Integer, Task> tasks = new HashMap<>();
-    HashMap<Integer, Epic> epics = new HashMap<>();
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    final HashMap<Integer, Task> tasks = new HashMap<>();
+    final HashMap<Integer, Epic> epics = new HashMap<>();
+    final HashMap<Integer, Subtask> subtasks = new HashMap<>();
     public static int globalId = 1;
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    final HistoryManager historyManager = Managers.getDefaultHistory();
 
-    @Override
-    public int generateId() {
+
+    private int generateId() {
         return globalId++;
     }
 
@@ -146,7 +146,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             System.out.println("Проверьте корректность вводимых данных" + epic.getName() + "\n");
         }
-
     }
 
     @Override
@@ -158,7 +157,6 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Проверьте корректность вводимых данных" + subtask.getName()
                     + " : на момент ввода нет сабтаска с номером " + subtask.getId() + "\n");
         }
-
     }
 
     @Override
@@ -223,8 +221,6 @@ public class InMemoryTaskManager implements TaskManager {
                     + " : на момент ввода нет эпика с номером " + id + "\n");
             return null;
         }
-
-
     }
 
     public TaskStatus defineStatusEpicByAllSubtasks(int epicId) {
@@ -243,7 +239,6 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             return TaskStatus.IN_PROGRESS;
         }
-
     }
 
     @Override
@@ -259,6 +254,5 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
-
 }
 
