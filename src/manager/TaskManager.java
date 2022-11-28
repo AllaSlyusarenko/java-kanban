@@ -53,6 +53,5 @@ public interface TaskManager {
     TaskStatus calculateStatus(int epicId);
 
     List<Task> getHistory();
-
 }
 

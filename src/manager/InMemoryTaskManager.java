@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    final HashMap<Integer, Task> tasks = new HashMap<>();
-    final HashMap<Integer, Epic> epics = new HashMap<>();
-    final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Task> tasks = new HashMap<>();
+    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
     public static int globalId = 1;
-    final HistoryManager historyManager = Managers.getDefaultHistory();
+    private final HistoryManager historyManager = Managers.getDefaultHistory();
 
 
     private int generateId() {
