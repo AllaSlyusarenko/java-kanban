@@ -16,7 +16,6 @@ public class InMemoryTaskManager implements TaskManager {
     public static int globalId = 1;
     private final HistoryManager historyManager = Managers.getDefaultHistory();
 
-
     private int generateId() {
         return globalId++;
     }
@@ -66,12 +65,18 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
+        for (Integer id : tasks.keySet()) {
+            historyManager.remove(id);
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
         deleteAllSubtasks();
+        for (Integer id : epics.keySet()) {
+            historyManager.remove(id);
+        }
         epics.clear();
     }
 
@@ -80,6 +85,9 @@ public class InMemoryTaskManager implements TaskManager {
         for (int epicID : epics.keySet()) {
             epics.get(epicID).setIncomingSubtasksId(new ArrayList<>());
             epics.get(epicID).setStatus(calculateStatus(epicID));
+        }
+        for (Integer id : subtasks.keySet()) {
+            historyManager.remove(id);
         }
         subtasks.clear();
     }
@@ -90,7 +98,6 @@ public class InMemoryTaskManager implements TaskManager {
             Task task = tasks.get(id);
             historyManager.add(task);
             return task;
-
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет таска с номером " + id + "\n");
@@ -163,6 +170,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             tasks.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет таска с номером " + id + "\n");
@@ -178,6 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
             newArray.remove(Integer.valueOf(id));
             epics.get(idEpic).setIncomingSubtasksId(newArray);
             epics.get(idEpic).setStatus(calculateStatus(idEpic));
+            historyManager.remove(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет сабтаска с номером " + id + "\n");
@@ -190,6 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
             ArrayList<Integer> newArray = epics.get(epicId).getIncomingSubtasksId();
             for (Integer id : newArray) {
                 subtasks.remove(id);
+                historyManager.remove(id);
             }
         } else {
             System.out.println("Проверьте корректность вводимых данных"
@@ -202,6 +212,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             deleteSubtaskByIdEpic(id);
             epics.remove(id);
+            historyManager.remove(id);
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет эпика с номером " + id + "\n");
