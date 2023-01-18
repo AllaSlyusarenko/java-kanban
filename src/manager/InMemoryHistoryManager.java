@@ -8,21 +8,21 @@ import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     static class Node {
-        private Node prev;
-        private Task elem;
-        private Node next;
+        Node prev;
+        Task elem;
+        Node next;
 
-        private Node(Node prev, Task elem, Node next) {
+        public Node(Node prev, Task elem, Node next) {
             this.prev = prev;
             this.elem = elem;
             this.next = next;
         }
     }
 
-    private HashMap<Integer, Node> keyTaskNode = new HashMap<>();
-    private Node head;
-    private Node tail;
-    private int size = 0;
+    HashMap<Integer, Node> keyTaskNode = new HashMap<>();
+    Node head;
+    Node tail;
+    int size = 0;
 
     void linkLast(Task elem) {
         Node node = new Node(tail, elem, null);
