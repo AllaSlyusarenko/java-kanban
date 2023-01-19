@@ -22,9 +22,10 @@ public class Epic extends Task {
         this.incomingSubtasksId = incomingSubtasksId;
     }
 
-    public TaskType typeClass(){
+    public TaskType typeClass() {
         return TaskType.EPIC;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

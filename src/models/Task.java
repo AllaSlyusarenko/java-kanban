@@ -53,7 +53,7 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
-    public TaskType typeClass(){
+    public TaskType typeClass() {
         return TaskType.TASK;
     }
 
@@ -62,8 +62,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
-                && Objects.equals(taskStatus, task.taskStatus);
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(taskStatus, task.taskStatus);
     }
 
     @Override
@@ -77,11 +76,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + taskStatus + '\'' +
-                '}';
+        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + taskStatus + '\'' + '}';
     }
 }

@@ -7,17 +7,13 @@ import java.util.List;
 
 public class CSVFileAction {
     public static String toString(Task task) {
-        String result = "";
-        if (task.typeClass().equals(TaskType.TASK) || task.typeClass().equals(TaskType.EPIC)) {
-            result = task.getId() + "," + task.typeClass() + "," + task.getName() + "," + task.getStatus() + ","
-                    + task.getDescription() + ",";
+        if (task.typeClass() != TaskType.SUBTASK) {
+            return (task.getId() + "," + task.typeClass() + "," + task.getName() + "," + task.getStatus() + ","
+                    + task.getDescription() + ",");
         }
-        if (task.typeClass().equals(TaskType.SUBTASK)) {
-            Subtask subtask = (Subtask) task;
-            result = subtask.getId() + "," + task.typeClass() + "," + subtask.getName() + "," + subtask.getStatus() + ","
-                    + subtask.getDescription() + "," + subtask.getEpicId();
-        }
-        return result;
+        Subtask subtask = (Subtask) task;
+        return (subtask.getId() + "," + task.typeClass() + "," + subtask.getName() + "," + subtask.getStatus() + ","
+                + subtask.getDescription() + "," + subtask.getEpicId());
     }
 
     public static Task fromString(String value) {

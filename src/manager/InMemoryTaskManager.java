@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    public static int globalId = 1;
+    protected static int globalId = 1;
     protected HistoryManager historyManager = Managers.getDefaultHistory();
 
     protected int generateId() {
@@ -234,7 +234,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    public TaskStatus defineStatusEpicByAllSubtasks(int epicId) {
+    private TaskStatus defineStatusEpicByAllSubtasks(int epicId) {
         int summs = 0;
         for (int id : epics.get(epicId).getIncomingSubtasksId()) {
             if (subtasks.get(id).getStatus().equals(TaskStatus.DONE)) {
@@ -252,8 +252,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    @Override
-    public TaskStatus calculateStatus(int epicId) {
+    private TaskStatus calculateStatus(int epicId) {
         if (epics.get(epicId).getIncomingSubtasksId().isEmpty()) {
             return TaskStatus.NEW;
         } else {

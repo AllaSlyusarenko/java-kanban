@@ -50,8 +50,6 @@ public interface TaskManager {
 
     ArrayList<Subtask> getAllEpicSubtasks(int id);
 
-    TaskStatus calculateStatus(int epicId);
-
     List<Task> getHistory();
 }
 

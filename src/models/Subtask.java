@@ -23,7 +23,7 @@ public class Subtask extends Task {
         this.epicId = epicId;
     }
 
-    public TaskType typeClass(){
+    public TaskType typeClass() {
         return TaskType.SUBTASK;
     }
 
