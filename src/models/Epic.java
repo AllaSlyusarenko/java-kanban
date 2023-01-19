@@ -10,6 +10,10 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(String name, String description, int id, TaskStatus taskStatus) {
+        super(name, description, id, taskStatus);
+    }
+
     public ArrayList<Integer> getIncomingSubtasksId() {
         return incomingSubtasksId;
     }
@@ -18,6 +22,9 @@ public class Epic extends Task {
         this.incomingSubtasksId = incomingSubtasksId;
     }
 
+    public TaskType typeClass(){
+        return TaskType.EPIC;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

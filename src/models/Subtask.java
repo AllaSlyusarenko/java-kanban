@@ -3,11 +3,15 @@ package models;
 import java.util.Objects;
 
 public class Subtask extends Task {
-
     protected int epicId;
 
     public Subtask(String name, String description, int epicId) {
         super(name, description);
+        this.epicId = epicId;
+    }
+
+    public Subtask(String name, String description, int id, TaskStatus taskStatus, int epicId) {
+        super(name, description, id, taskStatus);
         this.epicId = epicId;
     }
 
@@ -17,6 +21,10 @@ public class Subtask extends Task {
 
     public void setEpicId(int epicId) {
         this.epicId = epicId;
+    }
+
+    public TaskType typeClass(){
+        return TaskType.SUBTASK;
     }
 
     @Override

@@ -237,9 +237,9 @@ public class InMemoryTaskManager implements TaskManager {
     public TaskStatus defineStatusEpicByAllSubtasks(int epicId) {
         int summs = 0;
         for (int id : epics.get(epicId).getIncomingSubtasksId()) {
-            if (subtasks.get(id).getStatus().equals("DONE")) {
+            if (subtasks.get(id).getStatus().equals(TaskStatus.DONE)) {
                 summs += 2;
-            } else if (subtasks.get(id).getStatus().equals("IN_PROGRESS")) {
+            } else if (subtasks.get(id).getStatus().equals(TaskStatus.IN_PROGRESS)) {
                 summs += 1;
             }
         }

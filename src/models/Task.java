@@ -14,6 +14,12 @@ public class Task {
         this.taskStatus = TaskStatus.NEW;
     }
 
+    public Task(String name, String description, int id, TaskStatus taskStatus) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.taskStatus = taskStatus;
+    }
 
     public String getName() {
         return name;
@@ -45,6 +51,10 @@ public class Task {
 
     public void setStatus(TaskStatus taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public TaskType typeClass(){
+        return TaskType.TASK;
     }
 
     @Override

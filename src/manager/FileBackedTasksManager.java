@@ -1,8 +1,10 @@
 package manager;
 
+import exceptions.ManagerSaveException;
 import models.Epic;
 import models.Subtask;
 import models.Task;
+import models.TaskType;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -35,11 +37,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             bufferedWriter.write("\n");
             bufferedWriter.write(CSVFileAction.historyToString(this.historyManager));
         } catch (IOException e) {
-            throw new ManagerSaveException();
+            throw new ManagerSaveException("Ошибка записи в файл");
         }
-    }
-
-    class ManagerSaveException extends RuntimeException {
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
@@ -49,8 +48,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             BufferedReader br = new BufferedReader(reader);
             boolean firstLine = true;
             String line;
-            int currentId = 0;
-            List history;
+            List<Integer> history;
 
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
@@ -62,34 +60,36 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             for (int i = 0; i < lines.size() - 2; i++) {
                 Task workTask = CSVFileAction.fromString(lines.get(i));
-                if (workTask instanceof Subtask) {
-                    fileBackedTasksManager.subtasks.put(workTask.getId(), (Subtask) workTask);
-                    if (fileBackedTasksManager.epics.containsKey(((Subtask) workTask).getEpicId())) {
-                        fileBackedTasksManager.epics.get(((Subtask) workTask).getEpicId()).getIncomingSubtasksId().add(workTask.getId());
-                    }
-                } else if (workTask instanceof Epic) {
-                    fileBackedTasksManager.epics.put(workTask.getId(), (Epic) workTask);
-                } else {
-                    fileBackedTasksManager.tasks.put(workTask.getId(), workTask);
-                }
-                if (currentId < workTask.getId()) {
-                    currentId = workTask.getId();
+                TaskType workTaskType = workTask.typeClass();
+                switch (workTaskType) {
+                    case SUBTASK:
+                        fileBackedTasksManager.subtasks.put(workTask.getId(), (Subtask) workTask);
+                        if (fileBackedTasksManager.epics.containsKey(((Subtask) workTask).getEpicId())) {
+                            fileBackedTasksManager.epics.get(((Subtask) workTask).getEpicId()).getIncomingSubtasksId().add(workTask.getId());
+                            break;
+                        }
+                    case EPIC:
+                        fileBackedTasksManager.epics.put(workTask.getId(), (Epic) workTask);
+                        break;
+                    case TASK:
+                        fileBackedTasksManager.tasks.put(workTask.getId(), workTask);
+                        break;
                 }
             }
 
             history = CSVFileAction.historyFromString(lines.get(lines.size() - 1));
-            for (int i = 0; i < history.size(); i++) {
-                if (fileBackedTasksManager.tasks.containsKey(history.get(i))) {
-                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.tasks.get(history.get(i)));
-                } else if (fileBackedTasksManager.epics.containsKey(history.get(i))) {
-                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.epics.get(history.get(i)));
-                } else if (fileBackedTasksManager.subtasks.containsKey(history.get(i))) {
-                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.subtasks.get(history.get(i)));
+            for (int id : history) {
+                if (fileBackedTasksManager.tasks.get(id) != null) {
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.tasks.get(id));
+                } else if (fileBackedTasksManager.epics.get(id) != null) {
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.epics.get(id));
+                } else if (fileBackedTasksManager.subtasks.get(id) != null) {
+                    fileBackedTasksManager.historyManager.add(fileBackedTasksManager.subtasks.get(id));
                 }
             }
             return fileBackedTasksManager;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException("Ошибка при чтении из файла");
         }
     }
 
@@ -123,7 +123,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager1.getSubtaskById(5);
         fileBackedTasksManager1.getEpicById(3);
 
-
         File file2 = new File("src/file2.csv");
         if (!Files.exists(file2.toPath())) {
             if (!Files.exists(Path.of(file2.getParent()))) {
@@ -134,7 +133,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         Path file2Path = file2.toPath();
 
         Files.copy(file1Path, file2Path, StandardCopyOption.REPLACE_EXISTING);
-
 
         FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file2);
 
