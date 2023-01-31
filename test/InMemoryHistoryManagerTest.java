@@ -17,7 +17,11 @@ public class InMemoryHistoryManagerTest {
     void setUp(){
         //наполнение исходными данными
     }
-    //public ArrayList<Task> getTasks()
+
+    /*Для HistoryManager — тесты для всех методов интерфейса. Граничные условия:
+    a. Пустая история задач.
+            b. Дублирование.
+    с. Удаление из истории: начало, середина, конец.*/
     //public void add(Task task)
     //public List<Task> getHistory()
     //public void remove(int id)

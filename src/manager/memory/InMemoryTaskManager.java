@@ -41,16 +41,16 @@ public class InMemoryTaskManager implements TaskManager {
         return globalId++;
     }
 
-    public TreeMap<LocalDateTime, Task> getPrioritizedTasks() {
-        return prioritizedTasks;
-    }
-
     private boolean validationIntersection(Task task) {
         boolean result = false;
         if (prioritizedTasks.isEmpty()) {
             return true;
         }
         if (task.getStartTime() == ((LocalDateTime) null)) {
+            return true;
+        }
+        if (prioritizedTasks.containsKey(task.getStartTime()) && task.getId() == prioritizedTasks.get(task.getStartTime()).getId()
+                && task.getDuration() == prioritizedTasks.get(task.getStartTime()).getDuration()){
             return true;
         }
         for (Map.Entry<LocalDateTime, Task> entry : prioritizedTasks.entrySet()) {
@@ -394,6 +394,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    public TreeMap<LocalDateTime, Task> getPrioritizedTasks() {
+        return prioritizedTasks;
     }
 }
 
