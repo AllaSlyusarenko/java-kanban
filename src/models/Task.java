@@ -1,17 +1,28 @@
 package models;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
+
 
 public class Task {
     protected String name;
     protected String description;
     protected int id;
     protected TaskStatus taskStatus;
+    protected long duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Task(String name, String description, long duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
         this.taskStatus = TaskStatus.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public Task(String name, String description, int id, TaskStatus taskStatus) {
@@ -19,6 +30,15 @@ public class Task {
         this.description = description;
         this.id = id;
         this.taskStatus = taskStatus;
+    }
+
+    public Task(String name, String description, int id, TaskStatus taskStatus, long duration, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -53,8 +73,31 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     public TaskType typeClass() {
         return TaskType.TASK;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null) {
+            return startTime.plusMinutes(duration);
+        }
+        return null;
     }
 
     @Override
@@ -62,20 +105,26 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description) && Objects.equals(taskStatus, task.taskStatus);
+        return id == task.id && duration == task.duration && Objects.equals(name, task.name) &&
+                Objects.equals(description, task.description) && taskStatus == task.taskStatus &&
+                Objects.equals(startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + id;
-        result = 31 * result + (taskStatus != null ? taskStatus.hashCode() : 0);
-        return result;
+        return Objects.hash(name, description, id, taskStatus, duration, startTime);
     }
 
     @Override
     public String toString() {
-        return "Task{" + "name='" + name + '\'' + ", description='" + description + '\'' + ", id=" + id + ", status='" + taskStatus + '\'' + '}';
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", taskStatus=" + taskStatus +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + getEndTime() +
+                '}';
     }
 }

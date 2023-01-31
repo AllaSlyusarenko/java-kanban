@@ -1,5 +1,6 @@
-package manager;
+package manager.history;
 
+import manager.history.HistoryManager;
 import models.Task;
 
 import java.util.ArrayList;
@@ -36,15 +37,20 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     void removeNode(Node node) {
-        if (node.prev == null) { // первый элемент
-            node.next.prev = null;
-            head = node.next;
-        } else if (node.prev != null && node.next != null) { // элемент в середине
+        if (node.prev != null) {
             node.prev.next = node.next;
-            node.next.prev = node.prev;
-        } else {   //(node.next == null) элемент в конце
-            node.prev.next = null;
-            tail = node.prev;
+            if (node.next == null) {
+                tail = node.prev;
+            } else {
+                node.next.prev = node.prev;
+            }
+        } else {
+            head = node.next;
+            if (head == null) {
+                tail = null;
+            } else {
+                head.prev = null;
+            }
         }
         size--;
     }

@@ -1,17 +1,25 @@
 package models;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
     protected ArrayList<Integer> incomingSubtasksId = new ArrayList<>();
 
-    public Epic(String name, String description) {
+    protected LocalDateTime endTime;
+
+    public Epic(String name, String description) { // тут проверить, может нужен расчет продолж и начало
         super(name, description);
     }
 
-    public Epic(String name, String description, int id, TaskStatus taskStatus) {
-        super(name, description, id, taskStatus);
+    public Epic(String name, String description, int id, TaskStatus taskStatus, long duration, LocalDateTime startTime) {
+        super(name, description, id, taskStatus, duration, startTime);
+    }
+
+    public Epic(String name, String description, int id, TaskStatus taskStatus, long duration, LocalDateTime startTime, ArrayList<Integer> incomingSubtasksId) {
+        super(name, description, id, taskStatus, duration, startTime);
+        this.incomingSubtasksId = incomingSubtasksId;
     }
 
     public ArrayList<Integer> getIncomingSubtasksId() {
@@ -27,17 +35,26 @@ public class Epic extends Task {
     }
 
     @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Epic epic = (Epic) o;
-        return Objects.equals(incomingSubtasksId, epic.incomingSubtasksId);
+        return Objects.equals(incomingSubtasksId, epic.incomingSubtasksId) && Objects.equals(endTime, epic.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), incomingSubtasksId);
+        return Objects.hash(super.hashCode(), incomingSubtasksId, endTime);
     }
 
     @Override
@@ -46,8 +63,11 @@ public class Epic extends Task {
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
-                ", status='" + taskStatus + '\'' +
-                ", incomingSubtasks=" + incomingSubtasksId.size() +
+                ", taskStatus=" + taskStatus +
+                ", incomingSubtasksId=" + incomingSubtasksId +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
+                ", endTime=" + endTime +
                 '}';
     }
 }
