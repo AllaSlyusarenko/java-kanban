@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
 
         TaskManager taskManager = Managers.getDefault();
-        Task task1 = new Task("Task 1", "Description 1 ",10, LocalDateTime.of(2022, 3, 8, 15, 30));//id=1
+        Task task1 = new Task("Task 1", "Description 1 ",5, LocalDateTime.of(2022, 3, 8, 15, 30));//id=1
         taskManager.createNewTask(task1);
         Task task2 = new Task("Task 2", "Description 2 ",5, (LocalDateTime) null);//id=2
         taskManager.createNewTask(task2);
@@ -23,7 +23,7 @@ public class Main {
         Subtask subtask2 = new Subtask("Subtask 2", "Description 2 ",10, (LocalDateTime) null, 3);//id=4
         taskManager.createNewSubtask(subtask2);
         System.out.println("\n" + taskManager.getEpicById(3));
-        Subtask subtask3 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 50), 3);//id=6
+        Subtask subtask3 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 20), 3);//id=6
         taskManager.createNewSubtask(subtask3);
 
         System.out.println(taskManager.getAllEpicSubtasks(3));
