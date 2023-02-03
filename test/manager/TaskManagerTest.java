@@ -15,11 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class TaskManagerTest<T extends TaskManager> {
     protected TaskManager taskManager;
 
-    @BeforeEach
-    void beforeEach() {
-        taskManager = new InMemoryTaskManager();
-
-    }
 
     @Test
     void createNewTask() {
@@ -38,7 +33,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void createNewEpic() {
-
         Epic epic = new Epic("Epic 1", "Description 1");
         taskManager.createNewEpic(epic);
         assertEquals(TaskStatus.NEW, epic.getStatus(), "1.Присвоен неверный статус");

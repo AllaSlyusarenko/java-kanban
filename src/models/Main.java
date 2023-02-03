@@ -25,9 +25,9 @@ public class Main {
         System.out.println("\n" + taskManager.getEpicById(3));
         Subtask subtask3 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 45), 3);//id=6
         taskManager.createNewSubtask(subtask3);
-        Subtask subtask4 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 45), 3);//id=6
-        taskManager.createNewSubtask(subtask3);
-        // обновить сабтаск
+        Subtask subtask3_1 = new Subtask("Subtask 3_1", "Description 3 ",6,TaskStatus.IN_PROGRESS, 10, LocalDateTime.of(2022, 3, 8, 15, 45), 3);//id=6
+        taskManager.updateSubtask(subtask3_1);
+
 
 
         //System.out.println(taskManager.getAllEpicSubtasks(3));

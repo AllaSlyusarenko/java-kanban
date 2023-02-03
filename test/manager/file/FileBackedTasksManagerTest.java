@@ -1,8 +1,12 @@
 package manager.file;
 
 import manager.TaskManagerTest;
+import manager.memory.InMemoryTaskManager;
 import models.Epic;
+import models.Subtask;
 import models.Task;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,25 +22,40 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     c. Пустой список истории.*/
 
     private File file1;
-    private File file2;
-    FileBackedTasksManager fileBackedTasksManager1;
+
+    FileBackedTasksManager fileBackedTasksManager2;
+
+    @BeforeEach
+    void beforeEach() {
+        file1 = new File("test/file1.csv");
+        taskManager = new FileBackedTasksManager(file1);
+        fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
+    }
+    @AfterEach
+
 
     @Test
     void save() {
-        /*file1 = new File("src/file1.csv");
-        fileBackedTasksManager1 = new FileBackedTasksManager(file1);
-        assertEquals(0,fileBackedTasksManager1.getAllTasks().size(),"Неверное количество задач");
+        /*assertEquals(0,taskManager.getAllTasks().size(),"Неверное количество задач");
         Task task1 = new Task("Task1", "description task1", 9, LocalDateTime.of(2022, 3, 8, 16, 30));
-        fileBackedTasksManager1.createNewTask(task1);
-        assertEquals(1,fileBackedTasksManager1.getAllTasks().size(),"Неверное количество задач");
-        Epic epic3 = new Epic("Epic3", "description epic3");
-        fileBackedTasksManager1.createNewEpic(epic3);
-        assertEquals(1,fileBackedTasksManager1.getAllEpics().size(),"Неверное количество задач");*/
+        taskManager.createNewTask(task1);
+        assertEquals(1,taskManager.getAllTasks().size(),"Неверное количество задач");
+        Epic epic2 = new Epic("Epic2", "description epic2");
+        taskManager.createNewEpic(epic2);
+        assertEquals(1,taskManager.getAllEpics().size(),"Неверное количество задач");
+        assertEquals(0, taskManager.getAllSubtasks().size(), "Неверное количество сабтасков");
+        assertEquals(0,taskManager.getHistory().size(),"История должна быть пустая");
+        Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 10, LocalDateTime.of(2023, 1, 31, 21, 35), 2);
+        taskManager.createNewSubtask(subtask3);
+        assertEquals(1,taskManager.getAllSubtasks().size(), "Неверное количество сабтасков");*/
     }
 
     @Test
     void loadFromFile() {
-        file2 = new File("src/file2.csv");
+
+
+
+
     }
 
 
