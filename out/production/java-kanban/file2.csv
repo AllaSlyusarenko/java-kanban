@@ -1,9 +1,8 @@
 id,type,name,status,description,startTime,duration,epic
 1,TASK,Task1,NEW,description task1,2022-03-08T16:30,9,
 2,TASK,Task2,NEW,description task2,2022-03-08T16:40,5,
-6,TASK,Task7,NEW,description task7,2022-03-08T16:40,5,
 3,EPIC,Epic3,NEW,description epic3,2022-03-08T16:46,13,
-4,SUBTASK,Subtask4,NEW,description subtask4,2022-03-08T16:46,6,3
-5,SUBTASK,Subtask5,NEW,description subtask5,2022-03-08T16:53,7,3
+4,SUBTASK,Subtask4,NEW,description subtask4,2022-03-08T16:53,6,3
+5,SUBTASK,Subtask5,NEW,description subtask5,2022-03-08T16:46,7,3
 
-5,3,2,1,4,
+2,1,4,5,3,

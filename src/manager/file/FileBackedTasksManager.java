@@ -16,6 +16,7 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     File file;
+    int maxId = 0;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
@@ -43,12 +44,16 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
+        if (file.length() == 0L) {
+            return fileBackedTasksManager;
+        }
         List<String> lines = new ArrayList<>();
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             BufferedReader br = new BufferedReader(reader);
             boolean firstLine = true;
             String line;
             List<Integer> history;
+
 
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
@@ -60,6 +65,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             for (int i = 0; i < lines.size() - 2; i++) {
                 Task workTask = CSVFileAction.fromString(lines.get(i));
+                if (workTask.getId() > fileBackedTasksManager.maxId) {
+                    fileBackedTasksManager.maxId = workTask.getId();
+                }
                 TaskType workTaskType = workTask.typeClass();
                 switch (workTaskType) {
                     case SUBTASK:
@@ -114,9 +122,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager1.createNewTask(task2);
         Epic epic3 = new Epic("Epic3", "description epic3");
         fileBackedTasksManager1.createNewEpic(epic3);
-        Subtask subtask4 = new Subtask("Subtask4", "description subtask4", 6, LocalDateTime.of(2022, 3, 8, 16, 46), 3);
+        Subtask subtask4 = new Subtask("Subtask4", "description subtask4", 6, LocalDateTime.of(2022, 3, 8, 16, 53), 3);
         fileBackedTasksManager1.createNewSubtask(subtask4);
-        Subtask subtask5 = new Subtask("Subtask5", "description subtask5", 7, LocalDateTime.of(2022, 3, 8, 16, 53), 3);
+        Subtask subtask5 = new Subtask("Subtask5", "description subtask5", 7, LocalDateTime.of(2022, 3, 8, 16, 46), 3);
         fileBackedTasksManager1.createNewSubtask(subtask5);
 
         fileBackedTasksManager1.getTaskById(2);
@@ -156,13 +164,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Files.copy(file1Path, file2Path, StandardCopyOption.REPLACE_EXISTING);
 
-        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file2);
 
-        Task task7 = new Task("Task7", "description task7", 5, LocalDateTime.of(2022, 3, 8, 16, 40));//id=7
-        fileBackedTasksManager2.createNewTask(task7);
-        fileBackedTasksManager2.getTaskById(2);
-        fileBackedTasksManager2.getTaskById(1);
-        fileBackedTasksManager2.getSubtaskById(4);
+        fileBackedTasksManager1.loadFromFile(file2);
+        Task task7 = new Task("Task7", "description task7",5, LocalDateTime.of(2022, 4, 8, 16, 55));//id=6
+        fileBackedTasksManager1.createNewTask(task7);
+        fileBackedTasksManager1.getTaskById(2);
+        fileBackedTasksManager1.getTaskById(1);
+        fileBackedTasksManager1.getSubtaskById(4);
+
     }
 
     @Override

@@ -20,23 +20,24 @@ public class Main {
         Subtask subtask1 = new Subtask("Subtask 1", "Description 1 ", 6,LocalDateTime.of(2022, 3, 8, 15, 38),3);//id=4
         taskManager.createNewSubtask(subtask1);
 
-        Subtask subtask2 = new Subtask("Subtask 2", "Description 2 ",10, (LocalDateTime) null, 3);//id=4
+        Subtask subtask2 = new Subtask("Subtask 2", "Description 2 ",10, (LocalDateTime) null, 3);//id=5
         taskManager.createNewSubtask(subtask2);
         System.out.println("\n" + taskManager.getEpicById(3));
-        Subtask subtask3 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 20), 3);//id=6
+        Subtask subtask3 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 45), 3);//id=6
         taskManager.createNewSubtask(subtask3);
 
-        System.out.println(taskManager.getAllEpicSubtasks(3));
-        System.out.println(taskManager.getHistory());
+        //System.out.println(taskManager.getAllEpicSubtasks(3));
+        /*System.out.println(taskManager.getHistory());
         System.out.println("\n" + taskManager.getEpicById(3));
         System.out.println("\n" + taskManager.getTaskById(1));
         System.out.println(taskManager.getHistory());
         System.out.println("\n" + taskManager.getEpicById(3));
         System.out.println("\n" + taskManager.getTaskById(1));
-        System.out.println(taskManager.getHistory());
+        System.out.println(taskManager.getHistory());*/
 
-        Task task1_1 = new Task("Task 1_1", "Description 1 ",1,TaskStatus.IN_PROGRESS,10, LocalDateTime.of(2022, 3, 8, 15, 30));//id=1
+        Task task1_1 = new Task("Task 1_1", "Description 1 ",1,TaskStatus.IN_PROGRESS,10, LocalDateTime.of(2022, 3, 8, 15, 10));//id=1
         taskManager.updateTask(task1_1);
+        //System.out.println(taskManager.getTaskById(1));
         /*Epic epic2 = new Epic("Epic 2", "Description 2 ");//id=7
         taskManager.createNewEpic(epic2);
 
@@ -73,7 +74,7 @@ public class Main {
         taskManager.getSubtaskById(7).getEndTime();*/
 
         //System.out.println("\n" + taskManager.getEpicById(3));
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) taskManager;
-        System.out.println(inMemoryTaskManager.getPrioritizedTasks());
+        //InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) taskManager;
+        //System.out.println(inMemoryTaskManager.getPrioritizedTasks());
     }
 }

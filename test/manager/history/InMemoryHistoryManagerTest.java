@@ -1,13 +1,14 @@
-import manager.history.HistoryManager;
-import manager.history.InMemoryHistoryManager;
+package manager.history;
+
 import models.Epic;
 import models.Subtask;
 import models.Task;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class InMemoryHistoryManagerTest {
+class InMemoryHistoryManagerTest {
     protected Task task;
     protected Epic epic;
     protected Subtask subtask;
@@ -25,4 +26,16 @@ public class InMemoryHistoryManagerTest {
     //public void add(Task task)
     //public List<Task> getHistory()
     //public void remove(int id)
+
+    @Test
+    void add() {
+    }
+
+    @Test
+    void getHistory() {
+    }
+
+    @Test
+    void remove() {
+    }
 }

@@ -35,42 +35,59 @@ public class InMemoryTaskManager implements TaskManager {
         }
     };
     protected final TreeMap<LocalDateTime, Task> prioritizedTasks = new TreeMap<>(taskComparator);
-    protected static int globalId = 1;
+    protected int globalId = 1;
     protected HistoryManager historyManager = Managers.getDefaultHistory();
-
     protected int generateId() {
         return globalId++;
     }
 
     private boolean validationIntersection(Task task) {
-        boolean result = false;
+        boolean result = true;
         if (prioritizedTasks.isEmpty()) {
             return true;
         }
-        if (task.getStartTime() == ((LocalDateTime) null)) {
-            return true;
-        }
-        if (prioritizedTasks.containsKey(task.getStartTime()) && task.getId() == prioritizedTasks.get(task.getStartTime()).getId()
-                && task.getDuration() == prioritizedTasks.get(task.getStartTime()).getDuration()) {
+        if (task.getStartTime() == null) {
             return true;
         }
         for (Map.Entry<LocalDateTime, Task> entry : prioritizedTasks.entrySet()) {
-            if (entry.getKey() == null) {
-                return true;
+            if (entry.getKey() != null) {
+                if (task.getStartTime().isAfter(entry.getKey()) && task.getStartTime().isBefore(entry.getValue().getEndTime())) {
+                    return false;
+                }
+                if (task.getEndTime().isAfter(entry.getKey()) && task.getEndTime().isBefore(entry.getValue().getEndTime())) {
+                    return false;
+                }
+                if (task.getStartTime().isBefore(entry.getKey()) && task.getEndTime().isAfter(entry.getValue().getEndTime())) {
+                    return false;
+                }
+                if (task.getStartTime().isEqual(entry.getKey()) && task.getEndTime().isEqual(entry.getValue().getEndTime())) {
+                    return false;
+                }
+                if (task.getStartTime().isBefore(entry.getValue().getEndTime()) && task.getEndTime().isAfter(entry.getValue().getEndTime())) {
+                    return false;
+                }
             }
-            if (task.getEndTime().isBefore(entry.getKey()) || task.getStartTime().isAfter(entry.getValue().getEndTime())) {
-                return true;
-            } else if (task.getStartTime().isAfter(entry.getKey()) && task.getStartTime().isBefore(entry.getValue().getEndTime())) {
-                return false;
-            } else if (task.getEndTime().isAfter(entry.getKey()) && task.getEndTime().isBefore(entry.getValue().getEndTime())) {
-                return false;
+        }
+        return result;
+    }
+
+    private boolean validationIntersectionUpdate(Task task) {
+        boolean result = true;
+
+        for (Map.Entry<LocalDateTime, Task> entry : prioritizedTasks.entrySet()) {
+            if (task.getId() != entry.getValue().getId() && entry.getKey() != null) {
+                if ((task.getStartTime().isAfter(entry.getKey()) && task.getStartTime().isBefore(entry.getValue().getEndTime())) ||
+                        (task.getEndTime().isAfter(entry.getKey()) && task.getEndTime().isBefore(entry.getValue().getEndTime())) ||
+                        (task.getStartTime().isBefore(entry.getKey()) && task.getEndTime().isAfter(entry.getValue().getEndTime()))) {
+                    result = false;
+                }
             }
         }
         return result;
     }
 
     @Override
-    public void createNewTask(Task task) {
+    public  void createNewTask(Task task) {
         if (validationIntersection(task)) {
             task.setId(generateId());
             tasks.put(task.getId(), task);
@@ -202,7 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        if (validationIntersection(task)) {
+        if (validationIntersectionUpdate(task)) {
             if (tasks.containsKey(task.getId())) {
                 tasks.put(task.getId(), task);
                 prioritizedTasks.put(task.getStartTime(), task);
@@ -234,7 +251,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        if (validationIntersection(subtask)) {
+        if (validationIntersectionUpdate(subtask)) {
             if (subtasks.containsKey(subtask.getId())) {
                 subtasks.put(subtask.getId(), subtask);
                 epics.get(subtask.getEpicId()).setStatus(calculateStatus(subtask.getEpicId()));
