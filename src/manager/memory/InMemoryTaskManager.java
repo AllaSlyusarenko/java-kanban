@@ -87,7 +87,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public  void createNewTask(Task task) {
+    public  void createNewTask(Task task) { // нужно добавить int id
         if (validationIntersection(task)) {
             task.setId(generateId());
             tasks.put(task.getId(), task);
