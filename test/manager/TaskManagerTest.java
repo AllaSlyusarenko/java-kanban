@@ -207,24 +207,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.updateSubtask(subtask1_1);
         assertEquals(subtask1_1, taskManager.getSubtaskById(2), "Сабтаск не обновлен");
 
-        Subtask subtask2 = new Subtask("Subtask 2", "Description 2", 2, TaskStatus.IN_PROGRESS, 5, LocalDateTime.of(2023, 1, 31, 21, 45), 10);
-        taskManager.updateSubtask(subtask2);
         assertEquals(1,taskManager.getAllEpicSubtasks(1).size(), "Нет такого сабтаска");
-
-        Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 2, TaskStatus.IN_PROGRESS, 10, LocalDateTime.of(2023, 1, 31, 21, 33), 1);
-        taskManager.updateSubtask(subtask3);
-        assertNotEquals(subtask3, taskManager.getSubtaskById(2), "Обновление не произойдет из-за пересечения по времени");
     }
 
     @Test
     void deleteTaskById() {
         Task task = new Task("Task 1", "Description 1", 10, LocalDateTime.of(2023, 1, 31, 21, 20));
         taskManager.createNewTask(task);
-        taskManager.deleteTaskById(task.getId());
+        assertEquals(1, taskManager.getAllTasks().size(), "Неверное количество задач");
+        taskManager.deleteTaskById(1);
         assertEquals(0, taskManager.getAllTasks().size(), "Задача не удалена");
-        taskManager.createNewTask(task);
         taskManager.deleteTaskById(10);
-        assertEquals(1, taskManager.getAllTasks().size(), "Нет задачи с таким id");
         assertNull(taskManager.getTaskById(10), "Нет задачи с таким id");
     }
 

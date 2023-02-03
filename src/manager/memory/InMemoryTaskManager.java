@@ -35,7 +35,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     };
     protected final TreeMap<LocalDateTime, Task> prioritizedTasks = new TreeMap<>(taskComparator);
-    protected int globalId = 1;
+    protected int globalId = 1; //static
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     protected int generateId() {
         return globalId++;
