@@ -16,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks = new HashMap<>();
     protected final HashMap<Integer, Epic> epics = new HashMap<>();
     protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private Comparator<? super LocalDateTime> taskComparator = new Comparator<LocalDateTime>() {
+    private final Comparator<? super LocalDateTime> taskComparator = new Comparator<LocalDateTime>() {
         @Override
         public int compare(LocalDateTime o1, LocalDateTime o2) {
             int result = 0;
@@ -37,6 +37,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final TreeMap<LocalDateTime, Task> prioritizedTasks = new TreeMap<>(taskComparator);
     protected int globalId = 1; //static
     protected HistoryManager historyManager = Managers.getDefaultHistory();
+
     protected int generateId() {
         return globalId++;
     }
@@ -87,7 +88,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public  void createNewTask(Task task) { // нужно добавить int id
+    public void createNewTask(Task task) { // нужно добавить int id
         if (validationIntersection(task)) {
             task.setId(generateId());
             tasks.put(task.getId(), task);

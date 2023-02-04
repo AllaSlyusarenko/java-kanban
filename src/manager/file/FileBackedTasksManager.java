@@ -22,7 +22,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    public void save() {
+    private void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             bufferedWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
@@ -53,7 +53,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             boolean firstLine = true;
             String line;
             List<Integer> history;
-
+            int emptyHistoryCoef = 0;
 
             while ((line = br.readLine()) != null) {
                 if (firstLine) {
@@ -62,8 +62,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 }
                 lines.add(line);
             }
+            if (lines.get(lines.size() - 1).equals("")) {
+                emptyHistoryCoef = 1;
+            }
 
-            for (int i = 0; i < lines.size() - 2; i++) {
+            for (int i = 0; i < lines.size() - 2 + emptyHistoryCoef; i++) {
                 Task workTask = CSVFileAction.fromString(lines.get(i));
                 if (workTask.getId() > fileBackedTasksManager.maxId) {
                     fileBackedTasksManager.maxId = workTask.getId();
@@ -134,25 +137,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager1.getSubtaskById(5);
         fileBackedTasksManager1.getEpicById(3);
 
-        /*Task task1 = new Task("Task 1", "Description 1 ",10, LocalDateTime.of(2022, 3, 8, 15, 30));//id=1
-        fileBackedTasksManager1.createNewTask(task1);
-        Task task2 = new Task("Task 2", "Description 2 ",5, (LocalDateTime) null);//id=2
-        fileBackedTasksManager1.createNewTask(task2);
-        Epic epic3 = new Epic("Epic 1", "Description 1 ");//id=3
-        fileBackedTasksManager1.createNewEpic(epic3);
-
-
-        Subtask subtask4 = new Subtask("Subtask 1", "Description 1 ", 6,LocalDateTime.of(2022, 3, 8, 15, 40),3);//id=4
-        fileBackedTasksManager1.createNewSubtask(subtask4);
-        Subtask subtask5 = new Subtask("Subtask 2", "Description 2 ",10, (LocalDateTime) null, 3);//id=5
-        fileBackedTasksManager1.createNewSubtask(subtask5);
-        Subtask subtask6 = new Subtask("Subtask 3", "Description 3 ", 10, LocalDateTime.of(2022, 3, 8, 15, 50), 3);//id=6
-        fileBackedTasksManager1.createNewSubtask(subtask6);
-
-        Subtask subtask1_1 = new Subtask("Subtask 1", "Description 1 ", 4, TaskStatus.IN_PROGRESS,6,LocalDateTime.of(2022, 3, 8, 15, 40),3);
-        fileBackedTasksManager1.updateSubtask(subtask1_1);*/
-
-
         File file2 = new File("src/file2.csv");
         if (!Files.exists(file2.toPath())) {
             if (!Files.exists(Path.of(file2.getParent()))) {
@@ -164,9 +148,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Files.copy(file1Path, file2Path, StandardCopyOption.REPLACE_EXISTING);
 
-
         fileBackedTasksManager1.loadFromFile(file2);
-        Task task7 = new Task("Task7", "description task7",5, LocalDateTime.of(2022, 4, 8, 16, 55));//id=6
+        Task task7 = new Task("Task7", "description task7", 5, LocalDateTime.of(2022, 4, 8, 16, 55));//id=6
         fileBackedTasksManager1.createNewTask(task7);
         fileBackedTasksManager1.getTaskById(2);
         fileBackedTasksManager1.getTaskById(1);

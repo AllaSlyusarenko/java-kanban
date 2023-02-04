@@ -9,7 +9,7 @@ public class Epic extends Task {
 
     protected LocalDateTime endTime;
 
-    public Epic(String name, String description) { // тут проверить, может нужен расчет продолж и начало
+    public Epic(String name, String description) {
         super(name, description);
     }
 
