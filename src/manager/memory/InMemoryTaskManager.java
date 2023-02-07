@@ -419,8 +419,13 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    public TreeMap<LocalDateTime, Task> getPrioritizedTasks() {
-        return prioritizedTasks;
+    public ArrayList getPrioritizedTasks() {
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        for (Task task : prioritizedTasks.values()){
+            idList.add(task.getId());
+        }
+        //return new ArrayList<>(prioritizedTasks);
+        return null;
     }
 }
 

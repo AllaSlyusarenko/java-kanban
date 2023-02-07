@@ -4,6 +4,7 @@ import models.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected Subtask subtask2;
     protected Subtask subtask1_1;
     protected Subtask subtask2_1;
-
 
     protected void initTasks() {
         task = new Task("Task 1", "Description 1", 5, LocalDateTime.of(2023, 1, 31, 21, 20));
@@ -48,7 +48,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getAllTasksWithEmptyTasks() {
-        assertEquals(0, taskManager.getAllTasks().size(), "Неверное количество задач");
+        assertEquals(new ArrayList(), taskManager.getAllTasks(), "Неверное количество задач");
     }
 
     @Test
@@ -78,7 +78,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createNewTask(task2);
         taskManager.deleteAllTasks();
         assertEquals(0, taskManager.getAllTasks().size(), "Удалены не все задачи");
-        assertTrue(taskManager.getAllTasks().isEmpty(), "Неверное количество задач");
+        assertEquals(new ArrayList<>(), taskManager.getAllTasks(), "Должен быть возвращен пустой список");
     }
 
     void deleteAllTasksWithEmptyTasks() {
@@ -118,6 +118,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void updateTaskWithEmptyTasks() {
         taskManager.updateTask(task1_1);
         assertEquals(0, taskManager.getAllTasks().size(), "Обновление задачи не должно было произойти");
+        assertEquals(new ArrayList<>(), taskManager.getAllTasks(), "Должен быть возвращен пустой список");
     }
 
     @Test
@@ -179,7 +180,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getAllEpicsWithEmptyEpics() {
-        assertEquals(0, taskManager.getAllEpics().size(), "Неверное количество эпиков");
+        assertEquals(new ArrayList(), taskManager.getAllEpics(), "Неверное количество эпиков");
     }
 
     @Test
@@ -331,7 +332,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getAllSubtasksByEpicWithEmptyEpics() {
-        assertTrue(taskManager.getAllSubtasks().isEmpty(), "Неверное количество сабтасков");
+        assertEquals(new ArrayList(), taskManager.getAllSubtasks(), "Неверное количество сабтасков");
     }
 
     @Test
@@ -479,7 +480,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void getPrioritizedTasksWithEmptyTasks() {
         taskManager.createNewEpic(epic);
-        assertEquals(0, taskManager.getPrioritizedTasks().size(), "Неверное количество задач");
+        assertEquals(new ArrayList(){}, taskManager.getPrioritizedTasks(), "Неверное количество задач");
     }
 
     @Test

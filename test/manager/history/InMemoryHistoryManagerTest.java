@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,6 @@ class InMemoryHistoryManagerTest {
     protected Task task2;
     protected Epic epic;
 
-
     @BeforeAll
     protected void initTasks() {
         task = new Task("Task 1", "Description 1", 1, TaskStatus.NEW, 5, LocalDateTime.of(2023, 1, 31, 21, 20));
@@ -31,17 +31,8 @@ class InMemoryHistoryManagerTest {
 
     @BeforeEach
     void setUp() {
-        //наполнение исходными данными
         historyManager = new InMemoryHistoryManager();
     }
-
-    /*Для HistoryManager — тесты для всех методов интерфейса. Граничные условия:
-    a. Пустая история задач.
-            b. Дублирование.
-    с. Удаление из истории: начало, середина, конец.*/
-    //public void add(Task task)
-    //public List<Task> getHistory()
-    //public void remove(int id)
 
     @Test
     void add() {
@@ -65,6 +56,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory() {
+        assertNotNull(historyManager.getHistory(),"Должен быть возвращен список");
+        assertEquals(new ArrayList<>(), historyManager.getHistory(), "Должен быть пустой список");
     }
 
     @Test
@@ -97,5 +90,11 @@ class InMemoryHistoryManagerTest {
         assertEquals(2, historyManager.getHistory().size(), "Неверное количество задач в истории");
         assertEquals(1, historyManager.getHistory().get(0).getId(), "Неверный порядок задач в истории");
         assertEquals(2, historyManager.getHistory().get(1).getId(), "Неверный порядок задач в истории");
+    }
+    @Test
+    void removeWithWrongIdFromEmptyHistory() {
+        historyManager.remove(1);
+        assertEquals(0, historyManager.getHistory().size(), "Неверное количество задач в истории");
+        assertEquals(new ArrayList(), historyManager.getHistory(), "Неверное количество задач в истории");
     }
 }
