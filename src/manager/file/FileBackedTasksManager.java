@@ -77,7 +77,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         fileBackedTasksManager.subtasks.put(workTask.getId(), (Subtask) workTask);
                         if (fileBackedTasksManager.epics.containsKey(((Subtask) workTask).getEpicId())) {
                             fileBackedTasksManager.epics.get(((Subtask) workTask).getEpicId()).getIncomingSubtasksId().add(workTask.getId());
-                            fileBackedTasksManager.prioritizedTasks.put(((Subtask) workTask).getStartTime(), (Subtask) workTask);
+                            fileBackedTasksManager.prioritizedTasks.add((Subtask) workTask);
                             break;
                         }
                     case EPIC:
@@ -85,11 +85,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         break;
                     case TASK:
                         fileBackedTasksManager.tasks.put(workTask.getId(), workTask);
-                        fileBackedTasksManager.prioritizedTasks.put(workTask.getStartTime(), workTask);
+                        fileBackedTasksManager.prioritizedTasks.add(workTask);
                         break;
                 }
             }
-
 
             history = CSVFileAction.historyFromString(lines.get(lines.size() - 1));
             for (int id : history) {

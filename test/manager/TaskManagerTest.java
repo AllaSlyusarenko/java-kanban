@@ -480,7 +480,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void getPrioritizedTasksWithEmptyTasks() {
         taskManager.createNewEpic(epic);
-        assertEquals(new ArrayList(){}, taskManager.getPrioritizedTasks(), "Неверное количество задач");
+        assertEquals(new ArrayList() {
+        }, taskManager.getPrioritizedTasks(), "Неверное количество задач");
     }
 
     @Test

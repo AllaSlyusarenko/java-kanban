@@ -1,8 +1,6 @@
 package manager.history;
 
-import manager.memory.InMemoryTaskManager;
 import models.Epic;
-import models.Subtask;
 import models.Task;
 import models.TaskStatus;
 import org.junit.jupiter.api.BeforeAll;
@@ -56,7 +54,7 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void getHistory() {
-        assertNotNull(historyManager.getHistory(),"Должен быть возвращен список");
+        assertNotNull(historyManager.getHistory(), "Должен быть возвращен список");
         assertEquals(new ArrayList<>(), historyManager.getHistory(), "Должен быть пустой список");
     }
 
@@ -91,6 +89,7 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, historyManager.getHistory().get(0).getId(), "Неверный порядок задач в истории");
         assertEquals(2, historyManager.getHistory().get(1).getId(), "Неверный порядок задач в истории");
     }
+
     @Test
     void removeWithWrongIdFromEmptyHistory() {
         historyManager.remove(1);
