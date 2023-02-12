@@ -22,6 +22,10 @@ public class Epic extends Task {
         this.incomingSubtasksId = incomingSubtasksId;
     }
 
+    public Epic(String name, String description, int id, TaskStatus taskStatus, long duration, LocalDateTime startTime, LocalDateTime endTime) {
+        super(name, description, id, taskStatus, duration, startTime, endTime);
+    }
+
     public ArrayList<Integer> getIncomingSubtasksId() {
         return incomingSubtasksId;
     }

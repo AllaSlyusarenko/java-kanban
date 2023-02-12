@@ -94,6 +94,6 @@ class InMemoryHistoryManagerTest {
     void removeWithWrongIdFromEmptyHistory() {
         historyManager.remove(1);
         assertEquals(0, historyManager.getHistory().size(), "Неверное количество задач в истории");
-        assertEquals(new ArrayList(), historyManager.getHistory(), "Неверное количество задач в истории");
+        assertEquals(new ArrayList<>(), historyManager.getHistory(), "Неверное количество задач в истории");
     }
 }

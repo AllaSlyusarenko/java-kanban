@@ -24,7 +24,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
-            bufferedWriter.write("id,type,name,status,description,startTime,duration,epic\n");
+            bufferedWriter.write("id,type,name,status,description,startTime,duration,endTime,epic\n");
 
             for (Integer id : tasks.keySet()) {
                 bufferedWriter.write(CSVFileAction.toString(tasks.get(id)) + "\n");
@@ -126,7 +126,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         fileBackedTasksManager1.createNewEpic(epic3);
         Subtask subtask4 = new Subtask("Subtask4", "description subtask4", 6, LocalDateTime.of(2022, 3, 8, 16, 53), 3);
         fileBackedTasksManager1.createNewSubtask(subtask4);
-        Subtask subtask5 = new Subtask("Subtask5", "description subtask5", 7, LocalDateTime.of(2022, 3, 8, 16, 46), 3);
+        Subtask subtask5 = new Subtask("Subtask5", "description subtask5", 7, LocalDateTime.of(2022, 3, 7, 13, 45), 3);
         fileBackedTasksManager1.createNewSubtask(subtask5);
 
         fileBackedTasksManager1.getTaskById(2);

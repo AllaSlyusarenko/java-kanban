@@ -11,6 +11,7 @@ public class Task {
     protected TaskStatus taskStatus;
     protected long duration;
     protected LocalDateTime startTime;
+    protected LocalDateTime endTime;
 
     public Task(String name, String description) {
         this.name = name;
@@ -39,6 +40,16 @@ public class Task {
         this.taskStatus = taskStatus;
         this.duration = duration;
         this.startTime = startTime;
+    }
+
+    public Task(String name, String description, int id, TaskStatus taskStatus, long duration, LocalDateTime startTime, LocalDateTime endTime) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public String getName() {

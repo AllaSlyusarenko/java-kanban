@@ -35,6 +35,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(taskManager.getAllSubtasks().size(), fileBackedTasksManager2.getAllSubtasks().size());
         assertEquals(taskManager.getAllEpics().size(), fileBackedTasksManager2.getAllEpics().size());
         assertEquals(0, taskManager.getHistory().size(), "История пуста");
+        assertArrayEquals(taskManager.getHistory().toArray(), fileBackedTasksManager2.getHistory().toArray());
     }
 
     @Test
@@ -45,10 +46,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.createNewSubtask(subtask);
         taskManager.createNewSubtask(subtask2);
         FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
-        assertEquals(taskManager.getAllTasks().size(), fileBackedTasksManager2.getAllTasks().size());
-        assertEquals(taskManager.getAllSubtasks().size(), fileBackedTasksManager2.getAllSubtasks().size());
-        assertEquals(taskManager.getAllEpics().size(), fileBackedTasksManager2.getAllEpics().size());
+        assertArrayEquals(taskManager.getPrioritizedTasks().toArray(), fileBackedTasksManager2.getPrioritizedTasks().toArray(), "Отсортированные списки должны быть равны");
+        assertArrayEquals(taskManager.getAllTasks().toArray(), fileBackedTasksManager2.getAllTasks().toArray());
+        assertArrayEquals(taskManager.getAllSubtasks().toArray(), fileBackedTasksManager2.getAllSubtasks().toArray());
+        assertArrayEquals(taskManager.getAllEpics().toArray(), fileBackedTasksManager2.getAllEpics().toArray());
         assertEquals(0, taskManager.getHistory().size(), "История пуста");
+        assertArrayEquals(taskManager.getHistory().toArray(), fileBackedTasksManager2.getHistory().toArray());
     }
 
     @Test
@@ -65,9 +68,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.getSubtaskById(5);
         taskManager.getEpicById(1);
         FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
-        assertEquals(taskManager.getAllTasks().size(), fileBackedTasksManager2.getAllTasks().size());
-        assertEquals(taskManager.getAllSubtasks().size(), fileBackedTasksManager2.getAllSubtasks().size());
-        assertEquals(taskManager.getAllEpics().size(), fileBackedTasksManager2.getAllEpics().size());
-        assertEquals(taskManager.getPrioritizedTasks(), fileBackedTasksManager2.getPrioritizedTasks(), "Отсортированные списки должны быть равны");
+        assertArrayEquals(taskManager.getPrioritizedTasks().toArray(), fileBackedTasksManager2.getPrioritizedTasks().toArray(), "Отсортированные списки должны быть равны");
+        assertArrayEquals(taskManager.getAllTasks().toArray(), fileBackedTasksManager2.getAllTasks().toArray());
+        assertArrayEquals(taskManager.getAllSubtasks().toArray(), fileBackedTasksManager2.getAllSubtasks().toArray());
+        assertArrayEquals(taskManager.getAllEpics().toArray(), fileBackedTasksManager2.getAllEpics().toArray());
+        assertArrayEquals(taskManager.getHistory().toArray(), fileBackedTasksManager2.getHistory().toArray());
     }
 }
