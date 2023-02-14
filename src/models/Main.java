@@ -31,7 +31,7 @@ public class Main {
         taskManager.updateTask(task1_1);
         Epic epic2 = new Epic("Epic 2", "Description 2 ");//id=7
         taskManager.createNewEpic(epic2);
-        //System.out.println(taskManager.getPrioritizedTasks());
+        System.out.println(taskManager.getPrioritizedTasks());
         System.out.println(taskManager.getAllEpicSubtasks(3));
         System.out.println("\n" + taskManager.getEpicById(3));
         System.out.println("\n" + taskManager.getEpicById(7));
