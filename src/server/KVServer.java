@@ -29,17 +29,37 @@ public class KVServer { // занимается хранением данных,
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) { //get запрос
+    private void load(HttpExchange h) throws IOException { //get запрос
         // TODO Добавьте получение значения по ключу
-        // по запросу h должен из хешмапы data вернуть нужное значение и записываем его в этот HttpExchange h
-        //понадобится записывать респонс
-       /* httpExchange.sendResponseHeaders(200,0);
-        OutputStream outputStream = httpExchange.getResponseBody();
-        outputStream.write(gson.toJson(new Object()).getBytes(StandardCharsets.UTF_8)); // потом преобразовываем в строчку JSON
-        // и эту строчку подставим вместо new Object() - список задач или еще что-то, что нужно преобразовать в строчку с помощью gson
-        // и пользователь увидит этот ответ
-        // эта часть будет в каждом хендлере , написание ответа - что пользователь увидит в ответ на свой запрос
-        httpExchange.close();*/
+        try {
+            System.out.println("\n/load");
+            if (!hasAuth(h)) {
+                System.out.println("Запрос неавторизован, нужен параметр в query API_TOKEN со значением апи-ключа");
+                h.sendResponseHeaders(403, 0);
+                return;
+            }
+            if ("GET".equals(h.getRequestMethod())) {
+                String key = h.getRequestURI().getPath().substring("load".length());
+                if (key.isEmpty()) {
+                    System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
+                    h.sendResponseHeaders(400, 0);
+                    return;
+                }
+                if (!data.containsKey(key)) {
+                    System.out.println("Хранилище не содержит данный ключ");
+                    h.sendResponseHeaders(400, 0);
+                    return;
+                }
+                String value = data.get(key);
+                System.out.println("Значение " + value + " для ключа " + key);
+                sendText(h, value);
+            } else {
+                System.out.println("/load ждёт GET-запрос, а получил " + h.getRequestMethod());
+                h.sendResponseHeaders(405, 0);
+            }
+        } finally {
+            h.close();
+        }
     }
 
     private void save(HttpExchange h) throws IOException {
@@ -90,10 +110,14 @@ public class KVServer { // занимается хранением данных,
     }
 
     public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
+        System.out.println("Запускаем KVServer сервер на порту " + PORT);
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
     }
 
     private String generateApiToken() {

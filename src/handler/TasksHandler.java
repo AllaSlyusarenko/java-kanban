@@ -6,25 +6,42 @@ import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
+import manager.http.HttpTaskServer;
+import models.Task;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class TasksHandler implements HttpHandler {
-    private TaskManager taskManager; // связь между пользователем ктр запрашивает действия к методам таскменеджера,
-    // нужен кто-то кто будет имплементировать TaskManager
-    private Gson gson; // чтобы перевести в формат json
+    private TaskManager taskManager;
+    private Gson gson;
+    String response;
 
-    public TasksHandler(TaskManager taskManager) {
+    public TasksHandler() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocaleDateTimeTypeAdapter()); // создать этот класс адаптер
-        // в теории это было registerTypeAdapter,  из теории write()
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocaleDateTimeTypeAdapter());
         gson = gsonBuilder.create();
-        this.taskManager = taskManager;
+        taskManager = new HttpTaskServer().getTaskManager();
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange httpExchange) throws IOException {
+        String requestMethod = httpExchange.getRequestMethod();
+        if ("GET".equals(requestMethod)) {
+            ArrayList<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+            response = gson.toJson(prioritizedTasks);
+        } else {
+            response = "Проверьте правильность вводимых данных";
+            httpExchange.sendResponseHeaders(405, 0);
+        }
+
+        OutputStream outputStream = httpExchange.getResponseBody();
+        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+        httpExchange.sendResponseHeaders(200, bytes.length);
+        outputStream.write(bytes);
 
     }
 }

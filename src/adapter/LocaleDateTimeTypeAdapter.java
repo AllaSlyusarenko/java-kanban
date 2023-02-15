@@ -9,20 +9,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class LocaleDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
-    private static final DateTimeFormatter formatterWriter = DateTimeFormatter.ofPattern("dd--MM--yyyy");
-    //gsonBuilder.serializeNulls - чтобы null тоже показывать в ответе
-
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
     @Override
     public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException { // тут реализовать методы
         if (localDateTime == null) {
             jsonWriter.nullValue();
         } else {
-            jsonWriter.value(localDateTime.format(formatterWriter));
+            jsonWriter.value(localDateTime.format(formatter));
         }
     }
-
     @Override
     public LocalDateTime read(JsonReader jsonReader) throws IOException {
-        return null;
+        return LocalDateTime.parse(jsonReader.nextString(), formatter);
     }
 }

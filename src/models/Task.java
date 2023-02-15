@@ -12,7 +12,6 @@ public class Task {
     protected long duration;
     protected LocalDateTime startTime;
     protected LocalDateTime endTime;
-
     public Task(String name, String description) {
         this.name = name;
         this.description = description;

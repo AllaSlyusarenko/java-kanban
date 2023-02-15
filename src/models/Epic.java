@@ -6,9 +6,6 @@ import java.util.Objects;
 
 public class Epic extends Task {
     protected ArrayList<Integer> incomingSubtasksId = new ArrayList<>();
-
-    protected LocalDateTime endTime;
-
     public Epic(String name, String description) {
         super(name, description);
     }

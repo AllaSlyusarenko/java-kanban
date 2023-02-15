@@ -267,9 +267,11 @@ public class InMemoryTaskManager implements TaskManager {
                 prioritizedTasks.remove(subtasks.get(id));
                 subtasks.remove(id);
                 historyManager.remove(id);
-                epics.get(epicId).setStatus(TaskStatus.NEW);
-                calculateTimeEpic(epicId);
             }
+            epics.get(epicId).setIncomingSubtasksId(new ArrayList<>());
+            epics.get(epicId).setStatus(TaskStatus.NEW);
+            calculateTimeEpic(epicId);
+
         } else {
             System.out.println("Проверьте корректность вводимых данных"
                     + " : на момент ввода нет эпика с номером " + epicId + "\n");
@@ -334,6 +336,11 @@ public class InMemoryTaskManager implements TaskManager {
         LocalDateTime startTimeEpic = null;
         long duration = 0;
         LocalDateTime endTimeEpic = null;
+        if (epicSubtasks.isEmpty()) {
+            epics.get(epicId).setStartTime(startTimeEpic);
+            epics.get(epicId).setDuration(duration);
+            epics.get(epicId).setEndTime(endTimeEpic);
+        }
         if (!epicSubtasks.isEmpty()) {
             for (Subtask subtask : epicSubtasks) {
                 if (startTimeEpic == null) {

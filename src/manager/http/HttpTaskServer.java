@@ -12,28 +12,29 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     public static final int PORT = 8080;
     private HttpServer httpServer;
-    private Gson gson;
-    private TaskManager taskManager;
-
-    public HttpTaskServer(TaskManager taskManager) {
-        this.taskManager = taskManager;
+    private Gson gson = Managers.getGson();
+    private TaskManager taskManager = Managers.getDefault();
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
-
     public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
+        System.out.println("Запускаем HttpTaskServer сервер на порту " + PORT);
         try {
             httpServer = httpServer.create(new InetSocketAddress("localhost", PORT), 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        httpServer.createContext("/tasks/task", new TaskHandler(Managers.getDefault()));
-        httpServer.createContext("/tasks/subtask", new SubtaskHandler(Managers.getDefault()));
-        httpServer.createContext("/tasks/epic", new EpicHandler(Managers.getDefault()));
-        httpServer.createContext("/tasks/history", new HistoryHandler(Managers.getDefault()));
-        httpServer.createContext("/tasks/", new TasksHandler(Managers.getDefault()));
-        //Managers.getDefault()  - new FileBackedTasksManager() - это из тз
+        httpServer.createContext("/tasks/task/", new TaskHandler());
+        httpServer.createContext("/tasks/subtask/", new SubtaskHandler());
+        httpServer.createContext("/tasks/epic/", new EpicHandler());
+        httpServer.createContext("/tasks/history/", new HistoryHandler());
+        httpServer.createContext("/tasks/", new TasksHandler());
 
         httpServer.start();
+    }
+
+    public void stop() {
+        httpServer.stop(0);
     }
 }
 
