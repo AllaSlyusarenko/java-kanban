@@ -40,7 +40,6 @@ public class EpicHandler implements HttpHandler {
                     int id = Integer.parseInt(query.split("=")[1]);
                     epic = taskManager.getEpicById(id);
                     response = gson.toJson(epic);
-                    System.out.println(response);
                 } else {
                     ArrayList<Epic> epics = taskManager.getAllEpics();
                     response = gson.toJson(epics);
@@ -59,17 +58,15 @@ public class EpicHandler implements HttpHandler {
 
             }
             if ("POST".equals(requestMethod)) {
-                String bodyEpic = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);;
+                String bodyEpic = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 JsonElement jsonElement = JsonParser.parseString(bodyEpic);
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
-                System.out.println(jsonObject);
-                int id = jsonObject.get("id").getAsInt();
-
-                if (taskManager.getTaskById(id) == null) {//создание
+                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
                     epic = gson.fromJson(bodyEpic, Epic.class);
                     taskManager.createNewEpic(epic);
                     response = "Эпик добавлен";
                 } else {
+                    int id = jsonObject.get("id").getAsInt();
                     epic = taskManager.getEpicById(id);
                     String taskStatus = jsonObject.get("status").getAsString();
                     TaskStatus taskStatusType;
@@ -91,7 +88,6 @@ public class EpicHandler implements HttpHandler {
                 response = "Проверьте правильность вводимых данных";
                 httpExchange.sendResponseHeaders(405, 0);
             }
-
             httpExchange.sendResponseHeaders(200, 0);
 
             OutputStream outputStream = httpExchange.getResponseBody();

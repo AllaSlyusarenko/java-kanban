@@ -42,7 +42,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) {
+    public static FileBackedTasksManager load(File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         if (file.length() == 0L) {
             return fileBackedTasksManager;
@@ -147,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         Files.copy(file1Path, file2Path, StandardCopyOption.REPLACE_EXISTING);
 
-        fileBackedTasksManager1.loadFromFile(file2);
+        fileBackedTasksManager1.load(file2);
         Task task7 = new Task("Task7", "description task7", 5, LocalDateTime.of(2022, 4, 8, 16, 55));//id=6
         fileBackedTasksManager1.createNewTask(task7);
         fileBackedTasksManager1.getTaskById(2);

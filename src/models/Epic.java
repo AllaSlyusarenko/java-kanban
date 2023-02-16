@@ -6,6 +6,11 @@ import java.util.Objects;
 
 public class Epic extends Task {
     protected ArrayList<Integer> incomingSubtasksId = new ArrayList<>();
+
+    public Epic(ArrayList<Integer> incomingSubtasksId) {
+        this.incomingSubtasksId = incomingSubtasksId;
+    }
+
     public Epic(String name, String description) {
         super(name, description);
     }
@@ -65,7 +70,6 @@ public class Epic extends Task {
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", taskStatus=" + taskStatus +
-                ", incomingSubtasksId=" + incomingSubtasksId +
                 ", startTime=" + startTime +
                 ", duration=" + duration +
                 ", endTime=" + endTime +

@@ -33,12 +33,12 @@ public class TaskHandler implements HttpHandler { // 4 класса хендле
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange){
         String query = httpExchange.getRequestURI().getQuery();
         String requestMethod = httpExchange.getRequestMethod();
         try {
             if ("GET".equals(requestMethod)) {
-                if (query!=null) {
+                if (query != null) {
                     int id = Integer.parseInt(query.split("=")[1]);
                     task = taskManager.getTaskById(id);
                     response = gson.toJson(task);
@@ -49,7 +49,7 @@ public class TaskHandler implements HttpHandler { // 4 класса хендле
             }
 
             if ("DELETE".equals(requestMethod)) {
-                if (query!=null) {
+                if (query != null) {
                     int id = Integer.parseInt(query.split("=")[1]);
                     taskManager.deleteTaskById(id);
                     response = "Задача успешно удалена";
@@ -63,15 +63,12 @@ public class TaskHandler implements HttpHandler { // 4 класса хендле
                 String bodyTask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 JsonElement jsonElement = JsonParser.parseString(bodyTask);
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
-                System.out.println(jsonObject);
-                int id = jsonObject.get("id").getAsInt();
-
-                if (taskManager.getTaskById(id) == null) {//создание
+                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {
                     task = gson.fromJson(bodyTask, Task.class);
-                    taskManager.createNewTask(task);
+                    taskManager.createNewTask(task); // много раз сейв  - значение ключа для всех обновлено
                     response = "Задача добавлена";
                 } else {
-                    // обновление
+                    int id = jsonObject.get("id").getAsInt();
                     task = taskManager.getTaskById(id);
                     String taskStatus = jsonObject.get("status").getAsString();
                     TaskStatus taskStatusType;

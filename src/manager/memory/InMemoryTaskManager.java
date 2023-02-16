@@ -52,6 +52,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewTask(Task task) { // нужно добавить int id
         if (validationIntersection(task)) {
             task.setId(generateId());
+            task.setStatus(TaskStatus.NEW);
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
         } else {
@@ -63,6 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createNewEpic(Epic epic) {
         epic.setId(generateId());
         epic.setStatus(TaskStatus.NEW);
+        epic.setIncomingSubtasksId(new ArrayList<>());
         epics.put(epic.getId(), epic);
     }
 
@@ -71,6 +73,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (validationIntersection(subtask)) {
             if (epics.containsKey(subtask.getEpicId())) {
                 subtask.setId(generateId());
+                subtask.setStatus(TaskStatus.NEW);
                 subtasks.put(subtask.getId(), subtask);
                 epics.get(subtask.getEpicId()).getIncomingSubtasksId().add(subtask.getId());
                 epics.get(subtask.getEpicId()).setStatus(calculateStatus(subtask.getEpicId()));

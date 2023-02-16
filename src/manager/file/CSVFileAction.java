@@ -59,7 +59,7 @@ public class CSVFileAction {
         return result.toString();
     }
 
-    static List<Integer> historyFromString(String value) {
+    public static List<Integer> historyFromString(String value) {
         List<Integer> history = new LinkedList<>();
         if (!value.equals("")) {
             String[] parts = value.split(",");

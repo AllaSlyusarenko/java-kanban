@@ -12,8 +12,12 @@ import java.net.InetSocketAddress;
 public class HttpTaskServer {
     public static final int PORT = 8080;
     private HttpServer httpServer;
-    private Gson gson = Managers.getGson();
-    private TaskManager taskManager = Managers.getDefault();
+    private Gson gson;
+    private TaskManager taskManager;
+    public HttpTaskServer(){
+        this.taskManager = Managers.getDefault();
+        gson = Managers.getGson();
+    }
     public TaskManager getTaskManager() {
         return taskManager;
     }

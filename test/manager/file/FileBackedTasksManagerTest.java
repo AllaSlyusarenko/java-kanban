@@ -30,7 +30,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
 
     @Test
     void loadFromFileEmpty() {
-        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
+        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.load(file1);
         assertEquals(taskManager.getAllTasks().size(), fileBackedTasksManager2.getAllTasks().size());
         assertEquals(taskManager.getAllSubtasks().size(), fileBackedTasksManager2.getAllSubtasks().size());
         assertEquals(taskManager.getAllEpics().size(), fileBackedTasksManager2.getAllEpics().size());
@@ -45,7 +45,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.createNewTask(task2);
         taskManager.createNewSubtask(subtask);
         taskManager.createNewSubtask(subtask2);
-        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
+        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.load(file1);
         assertArrayEquals(taskManager.getPrioritizedTasks().toArray(), fileBackedTasksManager2.getPrioritizedTasks().toArray(), "Отсортированные списки должны быть равны");
         assertArrayEquals(taskManager.getAllTasks().toArray(), fileBackedTasksManager2.getAllTasks().toArray());
         assertArrayEquals(taskManager.getAllSubtasks().toArray(), fileBackedTasksManager2.getAllSubtasks().toArray());
@@ -67,7 +67,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.getSubtaskById(4);
         taskManager.getSubtaskById(5);
         taskManager.getEpicById(1);
-        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.loadFromFile(file1);
+        FileBackedTasksManager fileBackedTasksManager2 = FileBackedTasksManager.load(file1);
         assertArrayEquals(taskManager.getPrioritizedTasks().toArray(), fileBackedTasksManager2.getPrioritizedTasks().toArray(), "Отсортированные списки должны быть равны");
         assertArrayEquals(taskManager.getAllTasks().toArray(), fileBackedTasksManager2.getAllTasks().toArray());
         assertArrayEquals(taskManager.getAllSubtasks().toArray(), fileBackedTasksManager2.getAllSubtasks().toArray());

@@ -15,15 +15,15 @@ import com.sun.net.httpserver.HttpServer;
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
-public class KVServer { // занимается хранением данных, мы ему отправляем запрос, чтобы он мог сохранить
+public class KVServer {
     public static final int PORT = 8078;
     private final String apiToken;
     private final HttpServer server;
-    private final Map<String, String> data = new HashMap<>(); // всё хранится в этой хеш - мапе
+    private final Map<String, String> data = new HashMap<>();
 
     public KVServer() throws IOException {
         apiToken = generateApiToken();
-        server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
+        server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);//http://localhost:8078
         server.createContext("/register", this::register);
         server.createContext("/save", this::save);
         server.createContext("/load", this::load);
@@ -39,7 +39,7 @@ public class KVServer { // занимается хранением данных,
                 return;
             }
             if ("GET".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("load".length());
+                String key = h.getRequestURI().getPath().substring("load/".length()+1);
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
                     h.sendResponseHeaders(400, 0);

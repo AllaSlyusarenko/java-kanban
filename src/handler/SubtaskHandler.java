@@ -62,17 +62,15 @@ public class SubtaskHandler implements HttpHandler {
 
             }
             if ("POST".equals(requestMethod)) { // если есть id , то это обновление, если нет id, то добавление
-                String bodySubtask = httpExchange.getRequestBody().toString();
+                String bodySubtask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 JsonElement jsonElement = JsonParser.parseString(bodySubtask);
                 JsonObject jsonObject = jsonElement.getAsJsonObject();
-                int id = jsonObject.get("id").getAsInt();
-
-                if (taskManager.getSubtaskById(id) == null) {//создание
+                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
                     subtask = gson.fromJson(bodySubtask, Subtask.class);
                     taskManager.createNewSubtask(subtask);
                     response = "Подзадача добавлена";
                 } else {
-                    // обновление
+                    int id = jsonObject.get("id").getAsInt();
                     subtask = taskManager.getSubtaskById(id);
                     String taskStatus = jsonObject.get("status").getAsString();
                     TaskStatus taskStatusType;
