@@ -1,13 +1,11 @@
 package handler;
 
-
 import adapter.LocaleDateTimeTypeAdapter;
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.Managers;
 import manager.TaskManager;
-import manager.http.HttpTaskManager;
 import manager.http.HttpTaskServer;
 import models.Task;
 import models.TaskStatus;
@@ -18,8 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class TaskHandler implements HttpHandler { // 4 класса хендлеров
-
+public class TaskHandler implements HttpHandler {
     private TaskManager taskManager;
     private Gson gson;
     String response;
@@ -33,7 +30,7 @@ public class TaskHandler implements HttpHandler { // 4 класса хендле
     }
 
     @Override
-    public void handle(HttpExchange httpExchange){
+    public void handle(HttpExchange httpExchange) {
         String query = httpExchange.getRequestURI().getQuery();
         String requestMethod = httpExchange.getRequestMethod();
         try {

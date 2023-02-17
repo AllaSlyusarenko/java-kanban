@@ -29,7 +29,7 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) throws IOException { //get запрос
+    private void load(HttpExchange h) throws IOException {
         // TODO Добавьте получение значения по ключу
         try {
             System.out.println("\n/load");
@@ -39,7 +39,7 @@ public class KVServer {
                 return;
             }
             if ("GET".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("load/".length()+1);
+                String key = h.getRequestURI().getPath().substring("load/".length() + 1);
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
                     h.sendResponseHeaders(400, 0);

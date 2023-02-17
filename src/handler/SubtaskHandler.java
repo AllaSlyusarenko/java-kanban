@@ -30,7 +30,7 @@ public class SubtaskHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange) {
         String query = httpExchange.getRequestURI().getQuery();
         String requestMethod = httpExchange.getRequestMethod();
         String path = httpExchange.getRequestURI().getPath();
@@ -101,7 +101,6 @@ public class SubtaskHandler implements HttpHandler {
             System.out.println("Возникла проблема");
             e.printStackTrace();
         }
-
         httpExchange.close();
     }
 }

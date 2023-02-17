@@ -14,13 +14,16 @@ public class HttpTaskServer {
     private HttpServer httpServer;
     private Gson gson;
     private TaskManager taskManager;
-    public HttpTaskServer(){
+
+    public HttpTaskServer() {
         this.taskManager = Managers.getDefault();
         gson = Managers.getGson();
     }
+
     public TaskManager getTaskManager() {
         return taskManager;
     }
+
     public void start() {
         System.out.println("Запускаем HttpTaskServer сервер на порту " + PORT);
         try {
@@ -33,7 +36,6 @@ public class HttpTaskServer {
         httpServer.createContext("/tasks/epic/", new EpicHandler());
         httpServer.createContext("/tasks/history/", new HistoryHandler());
         httpServer.createContext("/tasks/", new TasksHandler());
-
         httpServer.start();
     }
 

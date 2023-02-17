@@ -34,9 +34,9 @@ public class Main {
         System.out.println(taskManager.getPrioritizedTasks());
         System.out.println(taskManager.getHistory());
         taskManager.deleteEpicById(3);
-        /*System.out.println(taskManager.getAllEpicSubtasks(3));
-        System.out.println("\n" + taskManager.getEpicById(3));
-        System.out.println("\n" + taskManager.getEpicById(7));*/
+//        System.out.println(taskManager.getAllEpicSubtasks(3));
+//        System.out.println("\n" + taskManager.getEpicById(3));
+//        System.out.println("\n" + taskManager.getEpicById(7));
 
     }
 }

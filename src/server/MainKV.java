@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 public class MainKV {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
 
         KVServer kvServer = new KVServer(); //8078
         kvServer.start();

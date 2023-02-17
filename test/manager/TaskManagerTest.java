@@ -272,29 +272,36 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void getNewEpicStatusNewDone() {
         taskManager.createNewEpic(epic);
+        int idEpic = epic.getId();
         taskManager.createNewSubtask(subtask);
-        Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 3, TaskStatus.DONE, 5, LocalDateTime.of(2023, 2, 25, 21, 40), 1);
+        Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 5, LocalDateTime.of(2022, 1, 25, 21, 50), idEpic);
         taskManager.createNewSubtask(subtask3);
+        Subtask subtask3_1 = new Subtask("Subtask 3", "Description 3", 3, TaskStatus.DONE, 5, LocalDateTime.of(2020, 2, 25, 21, 40), idEpic);
+        taskManager.updateSubtask(subtask3_1);
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Присвоен неверный статус");
     }
 
     @Test
     void getNewEpicStatusAllDone() {
         taskManager.createNewEpic(epic);
+        taskManager.createNewSubtask(subtask);
+        taskManager.createNewSubtask(subtask2);
         Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 2, TaskStatus.DONE, 5, LocalDateTime.of(2023, 2, 25, 21, 40), 1);
-        taskManager.createNewSubtask(subtask3);
-        Subtask subtask4 = new Subtask("Subtask 4", "Description 4", 3, TaskStatus.DONE, 5, LocalDateTime.of(2023, 2, 25, 21, 50), 1);
-        taskManager.createNewSubtask(subtask4);
+        taskManager.updateSubtask(subtask3);
+        Subtask subtask4 = new Subtask("Subtask 4", "Description 4", 3, TaskStatus.DONE, 5, LocalDateTime.of(2022, 2, 25, 21, 50), 1);
+        taskManager.updateSubtask(subtask4);
         assertEquals(TaskStatus.DONE, epic.getStatus(), "Присвоен неверный статус");
     }
 
     @Test
     void getNewEpicStatusInProgress() {
         taskManager.createNewEpic(epic);
+        taskManager.createNewSubtask(subtask);
+        taskManager.createNewSubtask(subtask2);
         Subtask subtask3 = new Subtask("Subtask 3", "Description 3", 2, TaskStatus.IN_PROGRESS, 5, LocalDateTime.of(2023, 2, 25, 21, 40), 1);
-        taskManager.createNewSubtask(subtask3);
+        taskManager.updateSubtask(subtask3);
         Subtask subtask4 = new Subtask("Subtask 4", "Description 4", 3, TaskStatus.IN_PROGRESS, 5, LocalDateTime.of(2023, 2, 25, 21, 50), 1);
-        taskManager.createNewSubtask(subtask4);
+        taskManager.updateSubtask(subtask4);
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Присвоен неверный статус");
     }
 

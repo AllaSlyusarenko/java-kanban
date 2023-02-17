@@ -37,11 +37,9 @@ public class TasksHandler implements HttpHandler {
             response = "Проверьте правильность вводимых данных";
             httpExchange.sendResponseHeaders(405, 0);
         }
-
         OutputStream outputStream = httpExchange.getResponseBody();
         byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
         httpExchange.sendResponseHeaders(200, bytes.length);
         outputStream.write(bytes);
-
     }
 }
