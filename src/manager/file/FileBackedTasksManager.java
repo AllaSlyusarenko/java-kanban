@@ -15,7 +15,7 @@ import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    File file;
+    private File file;
     int maxId = 0;
 
     public FileBackedTasksManager(File file) {

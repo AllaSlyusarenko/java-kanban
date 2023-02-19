@@ -28,18 +28,24 @@ public class TasksHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange) {
         String requestMethod = httpExchange.getRequestMethod();
-        if ("GET".equals(requestMethod)) {
-            ArrayList<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
-            response = gson.toJson(prioritizedTasks);
-        } else {
-            response = "Проверьте правильность вводимых данных";
-            httpExchange.sendResponseHeaders(405, 0);
+        try {
+            if ("GET".equals(requestMethod)) {
+                ArrayList<Task> prioritizedTasks = taskManager.getPrioritizedTasks();
+                response = gson.toJson(prioritizedTasks);
+            } else {
+                response = "Проверьте правильность вводимых данных";
+                httpExchange.sendResponseHeaders(405, 0);
+            }
+            OutputStream outputStream = httpExchange.getResponseBody();
+            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(200, bytes.length);
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            System.out.println("Возникла проблема");
+            e.printStackTrace();
         }
-        OutputStream outputStream = httpExchange.getResponseBody();
-        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-        httpExchange.sendResponseHeaders(200, bytes.length);
-        outputStream.write(bytes);
+        httpExchange.close();
     }
 }

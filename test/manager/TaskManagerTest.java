@@ -25,15 +25,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     protected void initTasks() {
         task = new Task("Task 1", "Description 1", 5, LocalDateTime.of(2023, 1, 31, 21, 20));
-        task2 = new Task("Task 2", "Description 2", 5, LocalDateTime.of(2023, 1, 31, 21, 28));
+        task2 = new Task("Task 2", "Description 2", 5, LocalDateTime.of(2023, 1, 30, 21, 28));
         task1_1 = new Task("Task 1_1", "Description 1_1", 1, TaskStatus.IN_PROGRESS, 10, LocalDateTime.of(2023, 1, 31, 21, 20));
         task2_1 = new Task("Task 2_1", "Description 2_1", 2, TaskStatus.DONE, 5, LocalDateTime.of(2023, 1, 31, 21, 28));
         epic = new Epic("Epic 1", "Description 1");
         epic2 = new Epic("Epic 1", "Description 1");
         epic1_1 = new Epic("Epic 1_1", "Description 1_1", 1, TaskStatus.NEW, 0, (LocalDateTime) null);
         epic2_1 = new Epic("Epic 2_1", "Description 2_1", 2, TaskStatus.NEW, 0, (LocalDateTime) null);
-        subtask = new Subtask("Subtask 1", "Description 1", 5, LocalDateTime.of(2023, 1, 31, 21, 50), 1);
-        subtask2 = new Subtask("Subtask 2", "Description 2", 5, LocalDateTime.of(2023, 1, 31, 21, 40), 1);
+        subtask = new Subtask("Subtask 1", "Description 1", 5, LocalDateTime.of(2023, 1, 25, 21, 50), 1);
+        subtask2 = new Subtask("Subtask 2", "Description 2", 5, LocalDateTime.of(2023, 1, 21, 21, 40), 1);
         subtask1_1 = new Subtask("Subtask 1_1", "Description 1_1", 2, TaskStatus.IN_PROGRESS, 5, LocalDateTime.of(2023, 1, 31, 21, 30), 1);
         subtask2_1 = new Subtask("Subtask 2_1", "Description 2_1", 3, TaskStatus.DONE, 5, LocalDateTime.of(2023, 1, 31, 21, 40), 1);
     }

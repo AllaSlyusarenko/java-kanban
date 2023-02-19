@@ -14,12 +14,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryHandler implements HttpHandler {
     private TaskManager taskManager;
     private Gson gson;
-    List<Task> history;
     String response;
 
     public HistoryHandler() {
@@ -30,21 +30,31 @@ public class HistoryHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange) {
 
         String requestMethod = httpExchange.getRequestMethod();
-
-        if ("GET".equals(requestMethod)) {
-            history = taskManager.getHistory();
-            response = gson.toJson(history);
-        } else {
-            response = "Проверьте правильность вводимых данных";
-            httpExchange.sendResponseHeaders(405, 0);
+        try {
+            switch (requestMethod) {
+                case "GET":
+                    List<Integer> listId = new ArrayList<>();
+                    List<Task> history = taskManager.getHistory();
+                    for (Task task : history) {
+                        listId.add(task.getId());
+                    }
+                    response = gson.toJson(listId);
+                    break;
+                default:
+                    response = "Проверьте правильность вводимых данных";
+                    httpExchange.sendResponseHeaders(405, 0);
+            }
+            OutputStream outputStream = httpExchange.getResponseBody();
+            byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
+            httpExchange.sendResponseHeaders(200, bytes.length);
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            System.out.println("Возникла проблема");
+            e.printStackTrace();
         }
-
-        OutputStream outputStream = httpExchange.getResponseBody();
-        byte[] bytes = response.getBytes(StandardCharsets.UTF_8);
-        httpExchange.sendResponseHeaders(200, bytes.length);
-        outputStream.write(bytes);
+        httpExchange.close();
     }
 }

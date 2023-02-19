@@ -14,16 +14,14 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
     KVServer kvServer;
 
     @BeforeEach
     void init() throws IOException {
-        kvServer = new KVServer(); //8078
+        kvServer = new KVServer();
         kvServer.start();
-        String url = "http://localhost:8078";
-        taskManager = new HttpTaskManager(url);
+        taskManager = new HttpTaskManager(KVServer.PORT);
         initTasks();
     }
 
@@ -37,20 +35,17 @@ class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     void loadTasks() {
-        Task task1 = new Task("Task 1", "Task 1", 5, LocalDateTime.of(2022, 3, 8, 15, 30));
-        taskManager.createNewTask(task1);
+        taskManager.createNewTask(task);
         assertNotNull(taskManager.getAllTasks(), "Возвращает не пустой список задач");
         assertEquals(1, taskManager.getAllTasks().size(), "Возвращает не пустой список задач");
-        Task task2 = new Task("Task 2", "Task 2", 5, LocalDateTime.of(2022, 3, 7, 15, 30));
         taskManager.createNewTask(task2);
         assertEquals(2, taskManager.getAllTasks().size(), "Возвращает не пустой список задач");
     }
 
     @Test
     void loadSubtasks() {
-        Epic epic1 = new Epic("Epic 1", "Epic 1");
-        taskManager.createNewEpic(epic1);
-        int idEpic = epic1.getId();
+        taskManager.createNewEpic(epic);
+        int idEpic = epic.getId();
         Subtask subtask2 = new Subtask("Subtask 2", "Subtask 2", 5, LocalDateTime.of(2022, 3, 6, 15, 30), idEpic);
         taskManager.createNewSubtask(subtask2);
         assertNotNull(taskManager.getAllSubtasks(), "Возвращает не пустой список подзадач");
@@ -76,13 +71,12 @@ class HttpTaskManagerTest extends TaskManagerTest<HttpTaskManager> {
 
     @Test
     void loadHistory() {
-        Task task1 = new Task("Task 1", "Task 1", 5, LocalDateTime.of(2022, 3, 8, 15, 30));
-        taskManager.createNewTask(task1);
-        int idTask = task1.getId();
+        taskManager.createNewTask(task);
+        int idTask = task.getId();
         taskManager.getTaskById(idTask);
         assertNotNull(taskManager.getHistory(), "Возвращает не пустой список истории");
         assertEquals(1, taskManager.getHistory().size(), "Возвращает не пустой список истории");
-        assertEquals(task1, taskManager.getHistory().get(0));
+        assertEquals(task, taskManager.getHistory().get(0));
 
         Epic epic2 = new Epic("Epic 2", "Epic 2");
         taskManager.createNewEpic(epic2);

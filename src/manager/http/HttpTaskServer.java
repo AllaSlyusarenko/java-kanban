@@ -16,7 +16,7 @@ public class HttpTaskServer {
     private TaskManager taskManager;
 
     public HttpTaskServer() {
-        this.taskManager = Managers.getDefault();
+        taskManager = Managers.getDefault();
         gson = Managers.getGson();
     }
 

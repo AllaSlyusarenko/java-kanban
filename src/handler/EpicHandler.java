@@ -31,62 +31,60 @@ public class EpicHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange) {
         String requestMethod = httpExchange.getRequestMethod();
         String query = httpExchange.getRequestURI().getQuery();
         try {
-            if ("GET".equals(requestMethod)) {
-                if (query != null) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    epic = taskManager.getEpicById(id);
-                    response = gson.toJson(epic);
-                } else {
-                    ArrayList<Epic> epics = taskManager.getAllEpics();
-                    response = gson.toJson(epics);
-                }
-            }
-
-            if ("DELETE".equals(requestMethod)) {
-                if (query != null) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    taskManager.deleteEpicById(id);
-                    response = gson.toJson("Эпик успешно удален");
-                } else {
-                    taskManager.deleteAllEpics();
-                    response = "Эпики успешно удалены";
-                }
-
-            }
-            if ("POST".equals(requestMethod)) {
-                String bodyEpic = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                JsonElement jsonElement = JsonParser.parseString(bodyEpic);
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
-                    epic = gson.fromJson(bodyEpic, Epic.class);
-                    taskManager.createNewEpic(epic);
-                    response = "Эпик добавлен";
-                } else {
-                    int id = jsonObject.get("id").getAsInt();
-                    epic = taskManager.getEpicById(id);
-                    String taskStatus = jsonObject.get("status").getAsString();
-                    TaskStatus taskStatusType;
-                    if (taskStatus.equals("NEW")) {
-                        taskStatusType = TaskStatus.NEW;
-                    } else if (taskStatus.equals("IN_PROGRESS")) {
-                        taskStatusType = TaskStatus.IN_PROGRESS;
+            switch (requestMethod) {
+                case "GET":
+                    if (query != null) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        epic = taskManager.getEpicById(id);
+                        response = gson.toJson(epic);
                     } else {
-                        taskStatusType = TaskStatus.DONE;
+                        ArrayList<Epic> epics = taskManager.getAllEpics();
+                        response = gson.toJson(epics);
                     }
-                    epic.setStatus(taskStatusType);
-                    taskManager.updateEpic(epic);
+                    break;
+                case "DELETE":
+                    if (query != null) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        taskManager.deleteEpicById(id);
+                        response = gson.toJson("Эпик успешно удален");
+                    } else {
+                        taskManager.deleteAllEpics();
+                        response = "Эпики успешно удалены";
+                    }
+                    break;
+                case "POST":
+                    String bodyEpic = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                    JsonElement jsonElement = JsonParser.parseString(bodyEpic);
+                    JsonObject jsonObject = jsonElement.getAsJsonObject();
+                    if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
+                        epic = gson.fromJson(bodyEpic, Epic.class);
+                        taskManager.createNewEpic(epic);
+                        response = "Эпик добавлен";
+                    } else {
+                        int id = jsonObject.get("id").getAsInt();
+                        epic = taskManager.getEpicById(id);
+                        String taskStatus = jsonObject.get("status").getAsString();
+                        TaskStatus taskStatusType;
+                        if (taskStatus.equals("NEW")) {
+                            taskStatusType = TaskStatus.NEW;
+                        } else if (taskStatus.equals("IN_PROGRESS")) {
+                            taskStatusType = TaskStatus.IN_PROGRESS;
+                        } else {
+                            taskStatusType = TaskStatus.DONE;
+                        }
+                        epic.setStatus(taskStatusType);
+                        taskManager.updateEpic(epic);
 
-                    response = "Обновление эпика";
-                }
-
-            }
-            if (!"GET".equals(requestMethod) && !"DELETE".equals(requestMethod) && !"POST".equals(requestMethod)) {
-                response = "Проверьте правильность вводимых данных";
-                httpExchange.sendResponseHeaders(405, 0);
+                        response = "Обновление эпика";
+                    }
+                    break;
+                default:
+                    response = "Проверьте правильность вводимых данных";
+                    httpExchange.sendResponseHeaders(405, 0);
             }
             httpExchange.sendResponseHeaders(200, 0);
 

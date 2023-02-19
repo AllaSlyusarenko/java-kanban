@@ -35,64 +35,66 @@ public class SubtaskHandler implements HttpHandler {
         String requestMethod = httpExchange.getRequestMethod();
         String path = httpExchange.getRequestURI().getPath();
         try {
-            if ("GET".equals(requestMethod)) {
-                if (path.contains("epic")) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    ArrayList<Subtask> subtasksEpic = taskManager.getAllEpicSubtasks(id);
-                    response = gson.toJson(subtasksEpic);
-                } else if (query == null) {
-                    ArrayList<Subtask> subtasks = taskManager.getAllSubtasks();
-                    response = gson.toJson(subtasks);
-                } else {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    subtask = taskManager.getSubtaskById(id);
-                    response = gson.toJson(subtask);
-                }
-            }
-
-            if ("DELETE".equals(requestMethod)) {
-                if (query != null) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    taskManager.deleteSubtaskById(id);
-                    response = "Подзадача успешно удалена";
-                } else {
-                    taskManager.deleteAllSubtasks();
-                    response = "Подадачи успешно удалены";
-                }
-
-            }
-            if ("POST".equals(requestMethod)) { // если есть id , то это обновление, если нет id, то добавление
-                String bodySubtask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                JsonElement jsonElement = JsonParser.parseString(bodySubtask);
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
-                    subtask = gson.fromJson(bodySubtask, Subtask.class);
-                    taskManager.createNewSubtask(subtask);
-                    response = "Подзадача добавлена";
-                } else {
-                    int id = jsonObject.get("id").getAsInt();
-                    subtask = taskManager.getSubtaskById(id);
-                    String taskStatus = jsonObject.get("status").getAsString();
-                    TaskStatus taskStatusType;
-                    if (taskStatus.equals("NEW")) {
-                        taskStatusType = TaskStatus.NEW;
-                    } else if (taskStatus.equals("IN_PROGRESS")) {
-                        taskStatusType = TaskStatus.IN_PROGRESS;
+            switch (requestMethod) {
+                case "GET":
+                    if (path.contains("epic")) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        ArrayList<Subtask> subtasksEpic = taskManager.getAllEpicSubtasks(id);
+                        response = gson.toJson(subtasksEpic);
+                    } else if (query == null) {
+                        ArrayList<Subtask> subtasks = taskManager.getAllSubtasks();
+                        response = gson.toJson(subtasks);
                     } else {
-                        taskStatusType = TaskStatus.DONE;
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        subtask = taskManager.getSubtaskById(id);
+                        response = gson.toJson(subtask);
                     }
-                    subtask.setStatus(taskStatusType);
-                    taskManager.updateTask(subtask);
+                    break;
+                case "DELETE":
+                    if (query != null) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        taskManager.deleteSubtaskById(id);
+                        response = "Подзадача успешно удалена";
+                    } else {
+                        taskManager.deleteAllSubtasks();
+                        response = "Подадачи успешно удалены";
+                    }
+                    break;
+                case "POST":
+                    String bodySubtask = null;
+                    try {
+                        bodySubtask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    JsonElement jsonElement = JsonParser.parseString(bodySubtask);
+                    JsonObject jsonObject = jsonElement.getAsJsonObject();
+                    if (!httpExchange.getRequestURI().getPath().contains("?id=")) {//создание
+                        subtask = gson.fromJson(bodySubtask, Subtask.class);
+                        taskManager.createNewSubtask(subtask);
+                        response = "Подзадача добавлена";
+                    } else {
+                        int id = jsonObject.get("id").getAsInt();
+                        subtask = taskManager.getSubtaskById(id);
+                        String taskStatus = jsonObject.get("status").getAsString();
+                        TaskStatus taskStatusType;
+                        if (taskStatus.equals("NEW")) {
+                            taskStatusType = TaskStatus.NEW;
+                        } else if (taskStatus.equals("IN_PROGRESS")) {
+                            taskStatusType = TaskStatus.IN_PROGRESS;
+                        } else {
+                            taskStatusType = TaskStatus.DONE;
+                        }
+                        subtask.setStatus(taskStatusType);
+                        taskManager.updateTask(subtask);
 
-                    response = "Обновление подзадачи";
-                }
-
+                        response = "Обновление подзадачи";
+                    }
+                    break;
+                default:
+                    response = "Проверьте правильность вводимых данных";
+                    httpExchange.sendResponseHeaders(405, 0);
             }
-            if (!"GET".equals(requestMethod) && !"DELETE".equals(requestMethod) && !"POST".equals(requestMethod)) {
-                response = "Проверьте правильность вводимых данных";
-                httpExchange.sendResponseHeaders(405, 0);
-            }
-
             httpExchange.sendResponseHeaders(200, 0);
 
             OutputStream outputStream = httpExchange.getResponseBody();

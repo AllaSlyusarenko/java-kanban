@@ -7,15 +7,14 @@ import models.Epic;
 import models.Subtask;
 import models.Task;
 
-
 public class HttpTaskManager extends FileBackedTasksManager {
     private final KVTaskClient kvTaskClient;
-    Gson gson;
+    private Gson gson;
 
-    public HttpTaskManager(String url) {
+    public HttpTaskManager(int PORT) {
         super(null);
         gson = Managers.getGson();
-        kvTaskClient = new KVTaskClient(url);
+        kvTaskClient = new KVTaskClient(PORT);
         load();
     }
 
@@ -30,12 +29,11 @@ public class HttpTaskManager extends FileBackedTasksManager {
         String jsonSubtasks = gson.toJson(subtasks);
         kvTaskClient.put("subtasks", jsonSubtasks);
 
-        String jsonHistory = gson.toJson(historyManager.getHistory());
+        String jsonHistory = gson.toJson(historyManager.getHistory()); //положить или возвращать только список id
         kvTaskClient.put("history", jsonHistory);
     }
 
-
-    public void load() {
+    private void load() {
         JsonElement jsonElementTasks = JsonParser.parseString(kvTaskClient.load("tasks"));
         if (!jsonElementTasks.isJsonNull()) {
             JsonArray jsonArrayTasks = jsonElementTasks.getAsJsonArray();

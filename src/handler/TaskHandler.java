@@ -3,6 +3,7 @@ package handler;
 import adapter.LocaleDateTimeTypeAdapter;
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
+
 import com.sun.net.httpserver.HttpHandler;
 import manager.Managers;
 import manager.TaskManager;
@@ -34,62 +35,66 @@ public class TaskHandler implements HttpHandler {
         String query = httpExchange.getRequestURI().getQuery();
         String requestMethod = httpExchange.getRequestMethod();
         try {
-            if ("GET".equals(requestMethod)) {
-                if (query != null) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    task = taskManager.getTaskById(id);
-                    response = gson.toJson(task);
-                } else {
-                    ArrayList<Task> tasks = taskManager.getAllTasks();
-                    response = gson.toJson(tasks);
-                }
-            }
-
-            if ("DELETE".equals(requestMethod)) {
-                if (query != null) {
-                    int id = Integer.parseInt(query.split("=")[1]);
-                    taskManager.deleteTaskById(id);
-                    response = "Задача успешно удалена";
-                } else {
-                    taskManager.deleteAllTasks();
-                    response = "Задачи успешно удалены";
-                }
-
-            }
-            if ("POST".equals(requestMethod)) { // если есть id , то это обновление, если нет id, то добавление
-                String bodyTask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                JsonElement jsonElement = JsonParser.parseString(bodyTask);
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                if (!httpExchange.getRequestURI().getPath().contains("?id=")) {
-                    task = gson.fromJson(bodyTask, Task.class);
-                    taskManager.createNewTask(task); // много раз сейв  - значение ключа для всех обновлено
-                    response = "Задача добавлена";
-                } else {
-                    int id = jsonObject.get("id").getAsInt();
-                    task = taskManager.getTaskById(id);
-                    String taskStatus = jsonObject.get("status").getAsString();
-                    TaskStatus taskStatusType;
-                    if (taskStatus.equals("NEW")) {
-                        taskStatusType = TaskStatus.NEW;
-                    } else if (taskStatus.equals("IN_PROGRESS")) {
-                        taskStatusType = TaskStatus.IN_PROGRESS;
+            switch (requestMethod) {
+                case "GET":
+                    if (query != null) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        task = taskManager.getTaskById(id);
+                        response = gson.toJson(task);
                     } else {
-                        taskStatusType = TaskStatus.DONE;
+                        ArrayList<Task> tasks = taskManager.getAllTasks();
+                        response = gson.toJson(tasks);
                     }
-                    task.setStatus(taskStatusType);
-                    taskManager.updateTask(task);
-
-                    response = "Обновление задачи";
-                }
-
+                    break;
+                case "DELETE":
+                    if (query != null) {
+                        int id = Integer.parseInt(query.split("=")[1]);
+                        taskManager.deleteTaskById(id);
+                        response = "Задача успешно удалена";
+                    } else {
+                        taskManager.deleteAllTasks();
+                        response = "Задачи успешно удалены";
+                    }
+                    break;
+                case "POST":
+                    String bodyTask = null;
+                    try {
+                        bodyTask = new String(httpExchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    JsonElement jsonElement = JsonParser.parseString(bodyTask);
+                    JsonObject jsonObject = jsonElement.getAsJsonObject();
+                    if (!httpExchange.getRequestURI().getPath().contains("?id=")) {
+                        task = gson.fromJson(bodyTask, Task.class);
+                        taskManager.createNewTask(task);
+                        response = "Задача добавлена";
+                    } else {
+                        int id = jsonObject.get("id").getAsInt();
+                        task = taskManager.getTaskById(id);
+                        String taskStatus = jsonObject.get("status").getAsString();
+                        TaskStatus taskStatusType;
+                        if (taskStatus.equals("NEW")) {
+                            taskStatusType = TaskStatus.NEW;
+                        } else if (taskStatus.equals("IN_PROGRESS")) {
+                            taskStatusType = TaskStatus.IN_PROGRESS;
+                        } else {
+                            taskStatusType = TaskStatus.DONE;
+                        }
+                        task.setStatus(taskStatusType);
+                        taskManager.updateTask(task);
+                        response = "Задача обновлена";
+                    }
+                    break;
+                default:
+                    response = "Проверьте правильность вводимых данных";
+                    try {
+                        httpExchange.sendResponseHeaders(405, 0);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
             }
-            if (!"GET".equals(requestMethod) && !"DELETE".equals(requestMethod) && !"POST".equals(requestMethod)) {
-                response = "Проверьте правильность вводимых данных";
-                httpExchange.sendResponseHeaders(405, 0);
-            }
-
             httpExchange.sendResponseHeaders(200, 0);
-
             OutputStream outputStream = httpExchange.getResponseBody();
             outputStream.write(response.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {

@@ -6,11 +6,12 @@ import com.google.gson.GsonBuilder;
 import manager.history.HistoryManager;
 import manager.history.InMemoryHistoryManager;
 import manager.http.HttpTaskManager;
+import server.KVServer;
 
 import java.time.LocalDateTime;
 
 public class Managers {
-    private static TaskManager taskManager = new HttpTaskManager("http://localhost:8078");
+    private static TaskManager taskManager = new HttpTaskManager(KVServer.PORT);
 
     public static HistoryManager getDefaultHistory() {
         return new InMemoryHistoryManager();
