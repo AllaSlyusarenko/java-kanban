@@ -519,4 +519,3 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         assertNull(task3.getEndTime(), "Неверное значение");
     }
 }
-
